@@ -16,4 +16,9 @@
 > this controller wouldn't be synced with the other controllers. But if the
 > sensor data is queried by the cloud, the response of all controllers will
 > always be synced.
-
+> 
+> Update:
+> AWS IoT seems to have no possibility to trigger data queries. As you can
+> see [here](https://docs.aws.amazon.com/de_de/iot/latest/developerguide/iot-moisture-raspi-setup.html),
+> the RaspberryPi has a loop that reads the data of the sensors and updates the
+> AWS IoT shadow.
