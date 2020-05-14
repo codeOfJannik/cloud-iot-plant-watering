@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emulator: <%= @device.name %></title>
+		<link rel="stylesheet" type="text/css" href="emulator.css" />
+		<script src="vue.js"></script>
+		<script src="emulator.js"></script>
+	</head>
+	<body>
+    <div id="app">
+
+    <div class="stage">
+
+    <div class="device">
+      <div class="label"><%= @device.name %></div>
+		  <div class="gpios">
+      <% @gpios.each do |id, gpio| %>
+        <gpio-<%= gpio.type %> id="<%= gpio.id %>"></gpio-<%= gpio.type %>>
+      <% end %>
+		  </div>
+    </div>
+
+    </div>
+    </div>
+	</body>
+</html>
+

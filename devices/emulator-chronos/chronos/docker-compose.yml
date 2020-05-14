@@ -1,0 +1,34 @@
+version: "3"
+services:
+
+  switch_emulator:
+    image: csiot/emulator
+    ports:
+      - "127.0.0.1:3333:9292"
+    volumes:
+      - "./switch/config.yaml:/emulator/config.yaml"
+
+  switch_software:
+    build:
+      context: switch
+    volumes:
+      - "./switch/:/usr/src/app/"
+    environment:
+      HARDWARE_URL: http://switch_emulator:9292
+      PYTHONUNBUFFERED: 1
+
+
+#  humidity1_emulator:
+#     image: csiot/emulator
+#     ports:
+#       - "127.0.0.1:3334:9293"
+#     volumes:
+#       - "./humidity1/config.yaml_/emulator/config.yaml
+  
+
+
+
+
+
+
+

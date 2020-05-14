@@ -1,0 +1,24 @@
+name: Sample Device
+gpios:
+  led_green:
+    type: led
+    state:
+      'on': false
+      color: green
+  led_red:
+    type: led
+    state:
+      'on': false
+      color: '#f44336'
+  temp_sensor:
+    type: sensor
+    state:
+      value: 21
+      min: 15
+      max: 30
+      increment: 1
+      unit: "C"
+  power_switch:
+    type: switch
+    state:
+      open: false
