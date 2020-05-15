@@ -1,0 +1,7 @@
+name: Device3
+gpios:
+
+  power_switch:
+    type: switch
+    state:
+      open: false

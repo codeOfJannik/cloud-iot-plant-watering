@@ -1,0 +1,50 @@
+version: "3"
+services:
+
+  device1_emulator:
+    image: csiot/emulator
+    ports:
+      - "127.0.0.1:5555:9292"
+    volumes:
+      - "./device1/config.yaml:/emulator/config.yaml"
+
+  device1_software:
+    build:
+      context: device1
+    volumes:
+      - "./device1/:/usr/src/app/"
+    environment:
+      HARDWARE_URL: http://device1_emulator:9292
+      PYTHONUNBUFFERED: 1
+
+  device2_emulator:
+    image: csiot/emulator
+    ports:
+      - "127.0.0.1:5556:9292"
+    volumes:
+      - "./device2/config.yaml:/emulator/config.yaml"
+
+  device2_software:
+    build:
+      context: device2
+    volumes:
+      - "./device2/:/usr/src/app/"
+    environment:
+      HARDWARE_URL: http://device2_emulator:9292
+      PYTHONUNBUFFERED: 1
+
+  device3_emulator:
+    image: csiot/emulator
+    ports:
+      - "127.0.0.1:5557:9292"
+    volumes:
+      - "./device3/config.yaml:/emulator/config.yaml"
+
+  device3_software:
+    build:
+      context: device3
+    volumes:
+      - "./device3/:/usr/src/app/"
+    environment:
+      HARDWARE_URL: http://device3_emulator:9292
+      PYTHONUNBUFFERED: 1
