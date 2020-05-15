@@ -18,14 +18,21 @@ services:
       PYTHONUNBUFFERED: 1
 
 
-#  humidity1_emulator:
-#     image: csiot/emulator
-#     ports:
-#       - "127.0.0.1:3334:9293"
-#     volumes:
-#       - "./humidity1/config.yaml_/emulator/config.yaml
+  humidity1_emulator:
+     image: csiot/emulator
+     ports:
+       - "127.0.0.1:3334:9292"
+     volumes:
+       - "./humidity1/config.yaml:/emulator/config.yaml"
   
-
+  humidity1_software:
+     build:
+       context: humidity1
+     volumes: 
+      - "./humidity1/:/usr/src/app/"
+     environment:
+       HARDWARE_URL: http://humidity1_emulator:9292
+       PYTHONBUFFERED: 1
 
 
 

@@ -1,6 +1,6 @@
 name: Humidity Sensor 1
 gpios:
-  temp_sensor:
+  humidity_sensor:
     type: sensor
     state:
       # the initial value
