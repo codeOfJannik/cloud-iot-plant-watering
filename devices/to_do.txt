@@ -1,3 +1,4 @@
-- create humidity sensors
+- create second humidity sensor
 - working switch with humidity sensors
+- humidity1 up and running, no connection in web browser
 
