@@ -38,3 +38,5 @@ override.tf.json
 
 *.pem
 *.key
+
+awsIoT/soil_moisture_1/aws/test.sh
