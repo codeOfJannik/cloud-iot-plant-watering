@@ -1,18 +1,38 @@
+variable "sensor_name" {
+  type = string
+}
+
+variable "policy" {
+  type = string
+  default = "_policy"
+}
+
+variable "cert_file_ending" {
+  type = string
+  default = ".cert.pem"
+}
+
+variable "private_key_ending" {
+  type = string
+  default = ".private.key"
+}
+
+
 provider "aws" {
   profile    = "default"
   region     = "us-east-1"
 }
 
-resource "aws_iot_thing" "soil_moisture_2" {
-  name = "soil_moisture_2"
+resource "aws_iot_thing" "thing" {
+  name = var.sensor_name
 }
 
-resource "aws_iot_certificate" "soil_moisture_2_cert" {
+resource "aws_iot_certificate" "thing_cert" {
   active = true
 }
 
-resource "aws_iot_policy" "soil_moisture_2_policy" {
-  name = "soil_moisture_2_policy"
+resource "aws_iot_policy" "thing_policy" {
+  name = "${var.sensor_name}${var.policy}"
 
   policy = <<EOF
 {
@@ -60,23 +80,23 @@ EOF
 }
 
 resource "aws_iot_thing_principal_attachment" "att" {
-  principal = aws_iot_certificate.soil_moisture_2_cert.arn
-  thing     = aws_iot_thing.soil_moisture_2.name
+  principal = aws_iot_certificate.thing_cert.arn
+  thing     = aws_iot_thing.thing.name
 }
 
 resource "aws_iot_policy_attachment" "att" {
-  policy = aws_iot_policy.soil_moisture_2_policy.name
-  target = aws_iot_certificate.soil_moisture_2_cert.arn
+  policy = aws_iot_policy.thing_policy.name
+  target = aws_iot_certificate.thing_cert.arn
 }
 
-resource "local_file" "soil_moisture_2_cert_pem" {
-  sensitive_content = aws_iot_certificate.soil_moisture_2_cert.certificate_pem
+resource "local_file" "thing_cert_pem" {
+  sensitive_content = aws_iot_certificate.thing_cert.certificate_pem
   file_permission = "0664"
-  filename = "soil_moisture_2.cert.pem"
+  filename = "${var.sensor_name}${var.cert_file_ending}"
 }
 
-resource "local_file" "soil_moisture_2_key_pem" {
-  sensitive_content = aws_iot_certificate.soil_moisture_2_cert.private_key
+resource "local_file" "thing_key_pem" {
+  sensitive_content = aws_iot_certificate.thing_cert.private_key
   file_permission = "0664"
-  filename = "soil_moisture_2.private.key"
+  filename = "${var.sensor_name}${var.private_key_ending}"
 }
