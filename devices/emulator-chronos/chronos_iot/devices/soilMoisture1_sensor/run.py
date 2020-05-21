@@ -7,10 +7,12 @@ from aws_iot_client import AWSIoTClient
 HARDWARE_URL = os.getenv('HARDWARE_URL')
 DEVICE_NAME = os.getenv('DEVICE_NAME')
 credentials_directory = "aws_credentials/"
-rootCA = credentials_directory+"root-CA.crt"
-certificate = credentials_directory+DEVICE_NAME+".cert.pem"
-private_key = credentials_directory+DEVICE_NAME+".private.key"
+rootCA = os.path.abspath(credentials_directory+"root-CA.crt")
+certificate = os.path.abspath(credentials_directory+DEVICE_NAME+".cert.pem")
+private_key = os.path.abspath(credentials_directory+DEVICE_NAME+".private.key")
+dirs = os.listdir(credentials_directory)
 awsIoTClient = AWSIoTClient.AWSIoTClient(rootCA, certificate, private_key, DEVICE_NAME)
+
 
 def send_value():
     try:

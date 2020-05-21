@@ -12,48 +12,48 @@ services:
     build:
       context: devices/soilMoisture1_sensor
       dockerfile: ../../Dockerfile
-    volumes:
-      - "./devices/soilMoisture1_sensor/:/usr/src/app/"
+    #    volumes:
+    #      - "./devices/soilMoisture1_sensor/:/usr/src/app/"
     environment:
       HARDWARE_URL: http://soilmoisture1_emulator:9292
       DEVICE_NAME: soilMoisture1_sensor
       AWS_IOT_ENDPOINT: ${AWS_ENDPOINT}
       PYTHONUNBUFFERED: 1
 
-# soilmoisture2_emulator:
-#    image: csiot/emulator
-#    ports:
-#      - "127.0.0.1:5556:9292"
-#    volumes:
-#      - "./devices/soilMoisture2_sensor/config.yaml:/emulator/config.yaml"
-#
-#  soilmoisture2_software:
-#    build:
-#      context: soilMoisture2_sensor
-#      dockerfile: ../../Dockerfile
-#    volumes:
-#      - "./devices/soilMoisture2_sensor/:/usr/src/app/"
-#    environment:
-#      HARDWARE_URL: http://soilmoisture2_emulator:9292
-#      DEVICE_NAME: soilMoisture2_sensor
-#      AWS_IOT_ENDPOINT: ${AWS_ENDPOINT}
-#      PYTHONUNBUFFERED: 1
-#
-#  switch1_emulator:
-#    image: csiot/emulator
-#    ports:
-#      - "127.0.0.1:5557:9292"
-#    volumes:
-#      - "./devices/water_switch/config.yaml:/emulator/config.yaml"
-#
-#  switch1_software:
-#    build:
-#      context: water_switch
-#      dockerfile: ../../Dockerfile
-#    volumes:
-#      - "./devices/water_switch/:/usr/src/app/"
-#    environment:
-#      HARDWARE_URL: http://switch1_emulator:9292
-#      DEVICE_NAME: water_switch
-#      AWS_IOT_ENDPOINT: ${AWS_ENDPOINT}
-#      PYTHONUNBUFFERED: 1
+  soilmoisture2_emulator:
+    image: csiot/emulator
+    ports:
+      - "127.0.0.1:5556:9292"
+    volumes:
+      - "./devices/soilMoisture2_sensor/config.yaml:/emulator/config.yaml"
+
+  soilmoisture2_software:
+    build:
+      context: devices/soilMoisture2_sensor
+      dockerfile: ../../Dockerfile
+    #    volumes:
+    #      - "./devices/soilMoisture2_sensor/:/usr/src/app/"
+    environment:
+      HARDWARE_URL: http://soilmoisture2_emulator:9292
+      DEVICE_NAME: soilMoisture2_sensor
+      AWS_IOT_ENDPOINT: ${AWS_ENDPOINT}
+      PYTHONUNBUFFERED: 1
+
+  switch1_emulator:
+    image: csiot/emulator
+    ports:
+      - "127.0.0.1:5557:9292"
+    volumes:
+      - "./devices/water_switch/config.yaml:/emulator/config.yaml"
+
+  switch1_software:
+    build:
+      context: devices/water_switch
+      dockerfile: ../../Dockerfile
+    #    volumes:
+    #      - "./devices/water_switch/:/usr/src/app/"
+    environment:
+      HARDWARE_URL: http://switch1_emulator:9292
+      DEVICE_NAME: water_switch
+      AWS_IOT_ENDPOINT: ${AWS_ENDPOINT}
+      PYTHONUNBUFFERED: 1

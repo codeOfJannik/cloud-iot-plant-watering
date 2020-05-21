@@ -2,21 +2,23 @@ import time
 import os
 import urllib.request
 import json
-from .aws_iot_client import AWSIoTClient
+from aws_iot_client import AWSIoTClient
 
 
 HARDWARE_URL = os.getenv('HARDWARE_URL')
 DEVICE_NAME = os.getenv('DEVICE_NAME')
 credentials_directory = "aws_credentials/"
-rootCA = credentials_directory+"root-CA.crt"
-certificate = credentials_directory+DEVICE_NAME+".cert.pem"
-private_key = credentials_directory+DEVICE_NAME+".private.key"
+rootCA = os.path.abspath(credentials_directory+"root-CA.crt")
+certificate = os.path.abspath(credentials_directory+DEVICE_NAME+".cert.pem")
+private_key = os.path.abspath(credentials_directory+DEVICE_NAME+".private.key")
 awsIoTClient = AWSIoTClient.AWSIoTClient(rootCA, certificate, private_key, DEVICE_NAME)
 
 
-def change_switch_state(client, userdata, message):
-    switch_state = message.payload['switch_state']
+def customCallback(client, userdata, message):
     try:
+        print("Received message:")
+        data = json.loads(message.payload)
+        switch_state = data['switch_state']
         # set new switch state
         url = f'{HARDWARE_URL}/gpios/'+DEVICE_NAME
         data = json.dumps({"open": switch_state}).encode('utf-8')
@@ -35,7 +37,8 @@ def change_switch_state(client, userdata, message):
 
 
 def start_loop():
-    awsIoTClient.subscribeToTopic("bed/switch/water", 0, change_switch_state)
+
+    awsIoTClient.subscribeToTopic("bed/switch/water", customCallback, 0)
     print(f'Starting software')
     print(f'HARDWARE_URL: {HARDWARE_URL}')
     while True:
