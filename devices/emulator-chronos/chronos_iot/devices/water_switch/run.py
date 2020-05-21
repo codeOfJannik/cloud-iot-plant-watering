@@ -2,7 +2,7 @@ import time
 import os
 import urllib.request
 import json
-from aws_iot_client import AWSIoTClient
+from .aws_iot_client import AWSIoTClient
 
 
 HARDWARE_URL = os.getenv('HARDWARE_URL')
@@ -40,5 +40,6 @@ def start_loop():
     print(f'HARDWARE_URL: {HARDWARE_URL}')
     while True:
         pass
+
 
 start_loop()

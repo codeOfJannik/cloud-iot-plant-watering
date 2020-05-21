@@ -4,11 +4,12 @@ import urllib.request
 import json
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 
+
 class AWSIoTClient:
-    def __init__(self, rootCAPath, certificatePath, privateKeyPath, device_name):
-        self.mqttClient = AWSIoTMQTTClient(v)
+    def __init__(self, root_ca_path, certificate_path, private_key_path, device_name):
+        self.mqttClient = AWSIoTMQTTClient(device_name)
         self.mqttClient.configureEndpoint(os.getenv("AWS_IOT_ENDPOINT"))
-        self.mqttClient.configureCredentials(rootCAPath, privateKeyPath, certificatePath)
+        self.mqttClient.configureCredentials(root_ca_path, private_key_path, certificate_path)
 
         # TODO: check configuration options
         # AWSIoTMQTTClient connection configuration
@@ -20,11 +21,12 @@ class AWSIoTClient:
 
         self.mqttClient.connect()
 
-    def subscribeToTopic(self, topic, callback, qualityOfService):
-        self.mqttClient.subscribe(topic, qualityOfService, callback)
+    def subscribeToTopic(self, topic, callback, quality_of_service):
+        self.mqttClient.subscribe(topic, quality_of_service, callback)
 
-    def publishMessageToTopic(self, message, topic, qualityOfService):
-        self.mqttClient.publish(topic, message, qualityOfService)
+    def publishMessageToTopic(self, message, topic, quality_of_service):
+        self.mqttClient.publish(topic, message, quality_of_service)
+
 
 if __name__ == "__main__":
     pass

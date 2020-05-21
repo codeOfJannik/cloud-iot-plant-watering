@@ -2,7 +2,7 @@ import time
 import os
 import urllib.request
 import json
-from aws_iot_client import AWSIoTClient
+from .aws_iot_client import AWSIoTClient
 
 HARDWARE_URL = os.getenv('HARDWARE_URL')
 DEVICE_NAME = os.getenv('DEVICE_NAME')
@@ -21,12 +21,10 @@ def send_value():
             if f.status == 200:
                 data = json.loads(f.read().decode('utf-8'))
                 # at this point to IoT Service instead print
-                message = {}
-                message['message'] = "Test from " + DEVICE_NAME
-                message['data'] = data['state']['value']
-                messageJSON = json.dumps(message)
+                message = {'message': "Test from " + DEVICE_NAME, 'data': data['state']['value']}
+                message_json = json.dumps(message)
                 topic = "bed/sensors/moisture"
-                awsIoTClient.publishMessageToTopic(messageJSON, topic, 0)
+                awsIoTClient.publishMessageToTopic(message_json, topic, 0)
                 return True
             return True
     except ConnectionRefusedError:
