@@ -1,7 +1,7 @@
 FROM python:latest
 
 WORKDIR /usr/src/app
-COPY . .
+COPY soilMoisture1_sensor .
 
 RUN ls -la
 RUN chmod +x ./start.sh

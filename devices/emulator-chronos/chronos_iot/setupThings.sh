@@ -1,6 +1,6 @@
 #!/bin/sh
 if [ "$#" -ne 2 ]; then
-	echo 'Invalid number of arguments passed. Require 2 arguments (./setupThings.sh sensorname endpoint)'
+	echo 'Invalid number of arguments passed. Require 2 arguments (./setupThings.sh sensor name endpoint)'
 	exit 1
 fi
 
