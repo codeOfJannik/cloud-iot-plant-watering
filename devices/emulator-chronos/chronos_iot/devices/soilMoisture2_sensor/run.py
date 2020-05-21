@@ -2,7 +2,7 @@ import time
 import os
 import urllib.request
 import json
-from .aws_iot_client import AWSIoTClient
+from aws_iot_client import AWSIoTClient
 
 HARDWARE_URL = os.getenv('HARDWARE_URL')
 DEVICE_NAME = os.getenv('DEVICE_NAME')

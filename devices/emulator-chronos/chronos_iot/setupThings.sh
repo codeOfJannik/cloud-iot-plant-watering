@@ -7,12 +7,13 @@ fi
 AWS_ENDPOINT=$1
 echo "AWS_ENDPOINT=${AWS_ENDPOINT}" > .env
 
-for d in $(ls devices/) ; do
+for d in $(find devices/ -mindepth 1 -maxdepth 1 -type d -printf '%f\n') ; do
   SENSOR_NAME=${d}
 
   echo "Copy terraform script into ${SENSOR_NAME}"
   cp ./setupThing.tf ./devices/$SENSOR_NAME/
   cp ./start.sh ./devices/$SENSOR_NAME/
+  cp -r ./aws_iot_client/ ./devices/$SENSOR_NAME/
   cd devices/$SENSOR_NAME
 
   echo "Start terraform init"
