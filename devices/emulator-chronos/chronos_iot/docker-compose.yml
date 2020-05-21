@@ -6,45 +6,48 @@ services:
     ports:
       - "127.0.0.1:5555:9292"
     volumes:
-      - "./soilmoisture1/config.yaml:/emulator/config.yaml"
+      - "./soilMoisture1_sensor/config.yaml:/emulator/config.yaml"
 
   soilmoisture1_software:
     build:
-      context: soilmoisture1
+      context: soilMoisture1_sensor
     volumes:
-      - "./soilmoisture1/:/usr/src/app/"
+      - "./soilMoisture1_sensor/:/usr/src/app/"
     environment:
       HARDWARE_URL: http://soilmoisture1_emulator:9292
+      DEVICE_NAME: soilMoisture1_sensor
       PYTHONUNBUFFERED: 1
 
-  soilmoisture2_emulator:
-    image: csiot/emulator
-    ports:
-      - "127.0.0.1:5556:9292"
-    volumes:
-      - "./soilmoisture2/config.yaml:/emulator/config.yaml"
-
-  soilmoisture2_software:
-    build:
-      context: soilmoisture2
-    volumes:
-      - "./soilmoisture2/:/usr/src/app/"
-    environment:
-      HARDWARE_URL: http://soilmoisture2_emulator:9292
-      PYTHONUNBUFFERED: 1
-
-  switch1_emulator:
-    image: csiot/emulator
-    ports:
-      - "127.0.0.1:5557:9292"
-    volumes:
-      - "./switch1/config.yaml:/emulator/config.yaml"
-
-  switch1_software:
-    build:
-      context: switch1
-    volumes:
-      - "./switch1/:/usr/src/app/"
-    environment:
-      HARDWARE_URL: http://switch1_emulator:9292
-      PYTHONUNBUFFERED: 1
+# soilmoisture2_emulator:
+#    image: csiot/emulator
+#    ports:
+#      - "127.0.0.1:5556:9292"
+#    volumes:
+#      - "./soilMoisture2_sensor/config.yaml:/emulator/config.yaml"
+#
+#  soilmoisture2_software:
+#    build:
+#      context: soilMoisture2_sensor
+#    volumes:
+#      - "./soilMoisture2_sensor/:/usr/src/app/"
+#    environment:
+#      HARDWARE_URL: http://soilmoisture2_emulator:9292
+#      DEVICE_NAME: soilMoisture2_sensor
+#      PYTHONUNBUFFERED: 1
+#
+#  switch1_emulator:
+#    image: csiot/emulator
+#    ports:
+#      - "127.0.0.1:5557:9292"
+#    volumes:
+#      - "./water_switch/config.yaml:/emulator/config.yaml"
+#
+#  switch1_software:
+#    build:
+#      context: water_switch
+#    volumes:
+#      - "./water_switch/:/usr/src/app/"
+#    environment:
+#      HARDWARE_URL: http://switch1_emulator:9292
+#      DEVICE_NAME: water_switch
+#      PYTHONUNBUFFERED: 1

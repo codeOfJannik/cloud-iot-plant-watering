@@ -2,20 +2,31 @@ import time
 import os
 import urllib.request
 import json
+from aws_iot_client import AWSIoTClient
 
 HARDWARE_URL = os.getenv('HARDWARE_URL')
-
+DEVICE_NAME = os.getenv('DEVICE_NAME')
+credentials_directory = "aws_credentials/"
+rootCA = credentials_directory+"root-CA.crt"
+certificate = credentials_directory+DEVICE_NAME+".cert.pem"
+private_key = credentials_directory+DEVICE_NAME+".private.key"
+awsIoTClient = AWSIoTClient.AWSIoTClient(rootCA, certificate, private_key, DEVICE_NAME)
 
 def send_value():
     try:
         # get and parse switch state
-        url = f'{HARDWARE_URL}/gpios/soilMoisture1_sensor'
+        url = f'{HARDWARE_URL}/gpios/'+DEVICE_NAME
         req = urllib.request.Request(url)
         with urllib.request.urlopen(req) as f:
             if f.status == 200:
                 data = json.loads(f.read().decode('utf-8'))
                 # at this point to IoT Service instead print
-                print(data['state']['value'])
+                message = {}
+                message['message'] = "Test from " + DEVICE_NAME
+                message['data'] = data['state']['value']
+                messageJSON = json.dumps(message)
+                topic = "bed/sensors/moisture"
+                awsIoTClient.publishMessageToTopic(messageJSON, topic, 0)
                 return True
             return True
     except ConnectionRefusedError:
