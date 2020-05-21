@@ -21,7 +21,7 @@ for d in $(find devices/ -mindepth 1 -maxdepth 1 -type d -printf '%f\n') ; do
 
   echo "Start terraform script for setup of ${SENSOR_NAME}"
 
-  terraform apply -var="sensor_name=${SENSOR_NAME}"
+  terraform apply -var="sensor_name=${SENSOR_NAME}" -auto-approve
   echo 'Finished terraform apply'
 
   echo 'Files after terraform finished:'

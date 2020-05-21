@@ -8,7 +8,7 @@ from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 class AWSIoTClient:
     def __init__(self, root_ca_path, certificate_path, private_key_path, device_name):
         self.mqttClient = AWSIoTMQTTClient(device_name)
-        self.mqttClient.configureEndpoint(os.getenv("AWS_IOT_ENDPOINT"))
+        self.mqttClient.configureEndpoint(os.getenv("AWS_IOT_ENDPOINT"), 8883)
         self.mqttClient.configureCredentials(root_ca_path, private_key_path, certificate_path)
 
         # TODO: check configuration options
