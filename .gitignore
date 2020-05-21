@@ -40,3 +40,7 @@ override.tf.json
 *.key
 
 awsIoT/soil_moisture_1/aws/test.sh
+*.env
+devices/emulator-chronos/chronos_iot/devices/*
+!devices/emulator-chronos/chronos_iot/devices/*/run.py
+!devices/emulator-chronos/chronos_iot/devices/*/config.yml
