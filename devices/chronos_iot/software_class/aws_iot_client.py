@@ -1,11 +1,16 @@
-import time
 import os
-import urllib.request
-import json
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
+
 
 class AWSIoTClient:
     def __init__(self, root_ca_path, certificate_path, private_key_path, device_name):
+        """
+        TODO
+        :param root_ca_path: TODO
+        :param certificate_path: TODO
+        :param private_key_path: TODO
+        :param device_name: TODO
+        """
         self.mqttClient = AWSIoTMQTTClient(device_name)
         self.mqttClient.configureEndpoint(os.getenv("AWS_IOT_ENDPOINT"), 8883)
         self.mqttClient.configureCredentials(root_ca_path, private_key_path, certificate_path)
@@ -20,11 +25,25 @@ class AWSIoTClient:
 
         self.mqttClient.connect()
 
-    def subscribeToTopic(self, topic, custom_callback, quality_of_service):
-        self.mqttClient.subscribe(topic, quality_of_service, custom_callback)
+    def subscribe_to_topic(self, topic, custom_callback, quality_of_service) -> bool:
+        """
+        TODO
+        :param topic: TODO
+        :param custom_callback: TODO
+        :param quality_of_service: TODO
+        :return: [bool]
+        """
+        return self.mqttClient.subscribe(topic, quality_of_service, custom_callback)
 
-    def publishMessageToTopic(self, message, topic, quality_of_service):
-        self.mqttClient.publish(topic, message, quality_of_service)
+    def publish_message_to_topic(self, message, topic, quality_of_service) -> bool:
+        """
+        TODO
+        :param message: TODO
+        :param topic: TODO
+        :param quality_of_service: TODO
+        :return: [bool]
+        """
+        return self.mqttClient.publish(topic, message, quality_of_service)
 
 
 if __name__ == "__main__":
