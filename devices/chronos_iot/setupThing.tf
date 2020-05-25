@@ -1,3 +1,7 @@
+data "aws_iot_endpoint" "endpointUrl" {
+  endpoint_type = "iot:Data"
+}
+
 variable "sensor_name" {
   type = string
 }
@@ -68,4 +72,9 @@ resource "local_file" "thing_key_pem" {
   sensitive_content = aws_iot_certificate.thing_cert.private_key
   file_permission = "0664"
   filename = "${var.sensor_name}${var.private_key_ending}"
+}
+
+resource "local_file" "aws_endpoint" {
+  filename = "aws_endpoint_url"
+  content = data.aws_iot_endpoint.endpointUrl.endpoint_address
 }

@@ -1,12 +1,3 @@
-#!/bin/sh
-if [ "$#" -ne 1 ]; then
-	echo 'Invalid number of arguments passed. Require 1 argument (aws endpoint)'
-	exit 1
-fi
-
-AWS_ENDPOINT=$1
-echo "AWS_ENDPOINT=${AWS_ENDPOINT}" > .env
-
 for d in $(find devices/ -mindepth 1 -maxdepth 1 -type d -printf '%f\n') ; do
   SENSOR_NAME=${d}
 
@@ -31,9 +22,16 @@ for d in $(find devices/ -mindepth 1 -maxdepth 1 -type d -printf '%f\n') ; do
   mv ./$SENSOR_NAME.cert.pem aws_credentials/
   mv ./$SENSOR_NAME.private.key aws_credentials/
 
+  if [ -z "$AWS_ENDPOINT" ]
+  then
+      AWS_ENDPOINT=$(cat aws_endpoint_url)
+  fi
+
   cd ../../
   echo "Returned to $(pwd)"
 done
+
+echo "AWS_ENDPOINT=${AWS_ENDPOINT}" > .env
 
 echo 'execute docker build'
 # docker build -t "${SENSOR_NAME}_image" -f ../Dockerfile .
