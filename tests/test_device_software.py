@@ -43,7 +43,7 @@ class TestDeviceSoftware(TestCase):
         mock_urlopen.read.return_value = 'content'
         mock_urlopen.__enter__.return_value = mock_urlopen.status
         actual = self.device_software.run_soil_moisture()
-        expected = True
+        expected = False
         self.assertEqual(expected, actual)
 
     # def test_run_water_switch(self):
