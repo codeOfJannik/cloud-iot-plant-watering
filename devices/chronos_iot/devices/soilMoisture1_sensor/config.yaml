@@ -5,16 +5,16 @@ gpios:
     type: sensor
     state:
       # the initial value
-      value: -100
+      value: 50
       
       # the minimal value
-      min: -300
+      min: 0
       
       # the maximum value
-      max: -60
+      max: 300
       
       # the step-size if the value goes up or down
       increment: 1
       
       # the unit (UI only, empty string for unitless)
-      unit: "hPa"
+      unit: "nFk (%)"
