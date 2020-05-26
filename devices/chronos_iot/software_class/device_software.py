@@ -15,7 +15,7 @@ class DeviceSoftware(AWSIoTClient):
         # get environment variables (set in docker-compose file)
         self.HARDWARE_URL = os.getenv('HARDWARE_URL')
         self.DEVICE_NAME = os.getenv('DEVICE_NAME')
-        self.INTERVAL_TIME = os.getenv('INTERVAL_TIME', default=3)
+        self.INTERVAL_TIME = int(os.getenv('INTERVAL_TIME', default=3))
         # set aws client variables
         self.credentials_directory = credentials_directory
         self.root_ca = os.path.abspath(self.credentials_directory + "root-CA.crt")
@@ -30,7 +30,7 @@ class DeviceSoftware(AWSIoTClient):
         :return: no return, run in infinite loop
         """
         print(f'Starting software')
-        print('HARDWARE_URL: {}'.format(self.HARDWARE_URL))
+        # print('HARDWARE_URL: {}'.format(self.HARDWARE_URL))
         while self.running:
             time.sleep(self.INTERVAL_TIME)
             software_function()
@@ -45,9 +45,7 @@ class DeviceSoftware(AWSIoTClient):
             url = '{url}/gpios/{device}'.format(url=self.HARDWARE_URL, device=self.DEVICE_NAME)
             req = urllib.request.Request(url)
             with urllib.request.urlopen(req) as f:
-                print(f.status)
                 if f.status == 200:
-                    print(f.status)
                     data = json.loads(f.read().decode('utf-8'))
                     # data to IoT Service
                     message = {'message': "Test from {}".format(self.DEVICE_NAME), 'data': data['state']['value']}

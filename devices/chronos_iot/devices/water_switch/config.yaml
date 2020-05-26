@@ -4,4 +4,4 @@ gpios:
   water_switch:
     type: switch
     state:
-      open: false
+      open: true

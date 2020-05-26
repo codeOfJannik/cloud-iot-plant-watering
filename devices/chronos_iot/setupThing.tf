@@ -1,5 +1,5 @@
 data "aws_iot_endpoint" "endpointUrl" {
-  endpoint_type = "iot:Data"
+  endpoint_type = "iot:Data-ATS"
 }
 
 variable "sensor_name" {

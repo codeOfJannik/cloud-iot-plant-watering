@@ -11,7 +11,7 @@ services:
   soilmoisture1_software:
     build:
       context: devices/soilMoisture1_sensor
-      dockerfile: Dockerfile
+      dockerfile: ../../Dockerfile
     #    volumes:
     #      - "./devices/soilMoisture1_sensor/:/usr/src/app/"
     environment:
@@ -31,7 +31,7 @@ services:
   soilmoisture2_software:
     build:
       context: devices/soilMoisture2_sensor
-      dockerfile: Dockerfile
+      dockerfile: ../../Dockerfile
     #    volumes:
     #      - "./devices/soilMoisture2_sensor/:/usr/src/app/"
     environment:
@@ -50,7 +50,7 @@ services:
   switch1_software:
     build:
       context: devices/water_switch
-      dockerfile: Dockerfile
+      dockerfile: ../../Dockerfile
     #    volumes:
     #      - "./devices/water_switch/:/usr/src/app/"
     environment:
