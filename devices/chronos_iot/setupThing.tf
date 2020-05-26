@@ -1,9 +1,10 @@
-data "aws_iot_endpoint" "endpointUrl" {
-  endpoint_type = "iot:Data-ATS"
+locals {
+  files = fileset(path.cwd, "devices/*/terraform-config")
 }
 
-variable "sensor_name" {
-  type = string
+provider "aws" {
+  profile    = "default"
+  region     = "us-east-1"
 }
 
 variable "policy" {
@@ -22,21 +23,23 @@ variable "private_key_ending" {
 }
 
 
-provider "aws" {
-  profile    = "default"
-  region     = "us-east-1"
+data "aws_iot_endpoint" "endpointUrl" {
+  endpoint_type = "iot:Data-ATS"
 }
 
 resource "aws_iot_thing" "thing" {
-  name = var.sensor_name
+  for_each = local.files
+  name = basename(dirname(each.value))
 }
 
 resource "aws_iot_certificate" "thing_cert" {
+  for_each = local.files
   active = true
 }
 
 resource "aws_iot_policy" "thing_policy" {
-  name = "${var.sensor_name}${var.policy}"
+  for_each = local.files
+  name = "${basename(dirname(each.value))}${var.policy}"
 
   policy = <<EOF
 {
@@ -53,25 +56,29 @@ EOF
 }
 
 resource "aws_iot_thing_principal_attachment" "att" {
-  principal = aws_iot_certificate.thing_cert.arn
-  thing     = aws_iot_thing.thing.name
+  for_each = local.files
+  principal = aws_iot_certificate.thing_cert[each.key].arn
+  thing     = aws_iot_thing.thing[each.key].name
 }
 
 resource "aws_iot_policy_attachment" "att" {
-  policy = aws_iot_policy.thing_policy.name
-  target = aws_iot_certificate.thing_cert.arn
+  for_each =  local.files
+  policy = aws_iot_policy.thing_policy[each.key].name
+  target = aws_iot_certificate.thing_cert[each.key].arn
 }
 
 resource "local_file" "thing_cert_pem" {
-  sensitive_content = aws_iot_certificate.thing_cert.certificate_pem
+  for_each = local.files
+  sensitive_content = aws_iot_certificate.thing_cert[each.key].certificate_pem
   file_permission = "0664"
-  filename = "${var.sensor_name}${var.cert_file_ending}"
+  filename = "${dirname(each.value)}/${basename(dirname(each.value))}${var.cert_file_ending}"
 }
 
 resource "local_file" "thing_key_pem" {
-  sensitive_content = aws_iot_certificate.thing_cert.private_key
+  for_each = local.files
+  sensitive_content = aws_iot_certificate.thing_cert[each.key].private_key
   file_permission = "0664"
-  filename = "${var.sensor_name}${var.private_key_ending}"
+  filename = "${dirname(each.value)}/${basename(dirname(each.value))}${var.private_key_ending}"
 }
 
 resource "local_file" "aws_endpoint" {
