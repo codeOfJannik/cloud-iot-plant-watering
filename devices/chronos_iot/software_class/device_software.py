@@ -30,6 +30,7 @@ class DeviceSoftware(AWSIoTClient):
         :return: [bool] True if no exception else False
         """
         while self.running:
+            print(f'Starting software')
             time.sleep(self.INTERVAL_TIME)
             try:
                 # get and parse switch state
