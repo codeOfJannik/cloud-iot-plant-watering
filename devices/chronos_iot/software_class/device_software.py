@@ -27,10 +27,11 @@ class DeviceSoftware(AWSIoTClient):
     def run_soil_moisture(self):
         """
         Get sensor data from hardware url and publish message in IoT Service
-        :return: [bool] True if no exception else False
+        :return: [bool] False if exception else repeat
         """
+        print(f'Starting software')
+
         while self.running:
-            print(f'Starting software')
             time.sleep(self.INTERVAL_TIME)
             try:
                 # get and parse switch state
@@ -43,8 +44,7 @@ class DeviceSoftware(AWSIoTClient):
                         message = {'message': "Test from {}".format(self.DEVICE_NAME), 'data': data['state']['value']}
                         message_json = json.dumps(message)
                         topic = "bed/sensors/moisture"
-                        return self.publish_message_to_topic(message_json, topic, 0)
-                    return False
+                        self.publish_message_to_topic(message_json, topic, 0)
             except ConnectionRefusedError:
                 print('could not connect to {url}'.format(url=self.HARDWARE_URL))
                 return False
@@ -55,9 +55,11 @@ class DeviceSoftware(AWSIoTClient):
     def run_water_switch(self):
         """
         Subscribe to IoT Service topic and change water switch state
-        :return: [bool] True if no exception else False
+        :return: [bool] False if exception else repeat
         """
+        print(f'Starting software')
         while self.running:
+
             def custom_callback(client, userdata, message):
                 """
                 Intern callback function to change switch state
@@ -83,8 +85,11 @@ class DeviceSoftware(AWSIoTClient):
                     print("change switch state error: {}".format(e))
                     return False
 
-            # subscribe to IoT Service and define callback function
-            return self.subscribe_to_topic("bed/switch/water", custom_callback, 0)
+            # subscribe to IoT Service and define callback function, return if callback is false, else repeat
+            if self.subscribe_to_topic("bed/switch/water", custom_callback, 0):
+                pass
+            else:
+                return False
 
 
 if __name__ == "__main__":
