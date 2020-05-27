@@ -1,5 +1,5 @@
 locals {
-  files = fileset(path.cwd, "devices/*/terraform-config")
+  files = fileset(path.cwd, "devices/*/run.py")
 }
 
 provider "aws" {
@@ -21,7 +21,6 @@ variable "private_key_ending" {
   type = string
   default = ".private.key"
 }
-
 
 data "aws_iot_endpoint" "endpointUrl" {
   endpoint_type = "iot:Data-ATS"
@@ -82,6 +81,15 @@ resource "local_file" "thing_key_pem" {
 }
 
 resource "local_file" "aws_endpoint" {
-  filename = "aws_endpoint_url"
-  content = data.aws_iot_endpoint.endpointUrl.endpoint_address
+  filename = ".env"
+  content = "AWS_ENDPOINT=${data.aws_iot_endpoint.endpointUrl.endpoint_address}"
+
+  provisioner "local-exec" {
+    command = "docker-compose up --build -d"
+  }
+
+  provisioner "local-exec" {
+    when    = destroy
+    command = "docker-compose down"
+  }
 }
