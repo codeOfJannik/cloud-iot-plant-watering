@@ -1,19 +1,10 @@
 stages:
-    - build
     - test
-
-build:
-    stage: build
-    script:
-        - echo "Building"
-        - mkdir build
-        - touch build/info.txt
-    artifacts:
-        paths:
-            - build/
 
 test:
     stage: test
     script:
         - echo "Testing"
-        - test -f "build/info.txt"
+        - apk update
+        - apk add --update-cache python3
+        - python3 -m unittest ./tests/test_device_software.py
