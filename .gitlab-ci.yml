@@ -6,4 +6,7 @@ test:
     script:
         - echo "Testing"
         - echo "test_2"
+        - sudo apt-get update -y
+        - sudo apt-get install python-dev -y
+        - sudi apt-get install python-pip -y
         - python -m unittest discover -t ./tests
