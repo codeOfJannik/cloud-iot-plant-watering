@@ -19,21 +19,6 @@ class TestDeviceSoftware(TestCase):
         # call class and skip super init
         self.device_software = DeviceSoftware()
 
-    def test_start_loop(self):
-        # run loop once (side effect 1, 0)
-        sentinel = PropertyMock(side_effect=[1, 0])
-        type(self.device_software).running = sentinel
-        # run loop once and assert output
-        with patch('sys.stdout', new=StringIO()) as output:
-            # run function
-            actual = self.device_software.start_loop(software_function=test_function)
-            # test output
-            expected_output = "Starting software\nHARDWARE_URL: http://soilmoisture1_emulator:9292"
-            self.assertIn(expected_output, output.getvalue())
-            # test return value
-            expected = None
-            self.assertEqual(first=expected, second=actual)
-
     @patch('devices.chronos_iot.software_class.device_software.urllib.request.urlopen')
     def test_run_soil_moisture_fail(self, mock_urlopen):
         # cm = MagicMock()
