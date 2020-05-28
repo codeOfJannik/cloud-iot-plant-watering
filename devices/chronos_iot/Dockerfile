@@ -1,9 +1,9 @@
 FROM python:latest
 
-WORKDIR /usr/src/app
-COPY . .
+WORKDIR /usr/src/cert
 
-RUN chmod +x ./start.sh
-RUN /bin/bash ./start.sh
+RUN curl https://www.amazontrust.com/repository/AmazonRootCA1.pem > root-CA.crt
+RUN pip install AWSIoTPythonSDK
+RUN ls -la
 
-CMD python run.py
+CMD python ../app/run.py

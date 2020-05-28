@@ -6,7 +6,7 @@ from .aws_iot_client import AWSIoTClient
 
 
 class DeviceSoftware(AWSIoTClient):
-    def __init__(self, credentials_directory: str = "aws_credentials/"):
+    def __init__(self, credentials_directory: str = "../app/"):
         """
         Class to run device software in a loop
         :param credentials_directory: defines, where to find the aws device credentials for IoT Service
@@ -19,7 +19,7 @@ class DeviceSoftware(AWSIoTClient):
         self.INTERVAL_TIME = int(os.getenv('INTERVAL_TIME', default=3))
         # set aws client variables
         self.credentials_directory = credentials_directory
-        self.root_ca = os.path.abspath(self.credentials_directory + "root-CA.crt")
+        self.root_ca = os.path.abspath("root-CA.crt")
         self.certificate = os.path.abspath(self.credentials_directory + self.DEVICE_NAME + ".cert.pem")
         self.private_key = os.path.abspath(self.credentials_directory + self.DEVICE_NAME + ".private.key")
         super().__init__(self.root_ca, self.certificate, self.private_key, self.DEVICE_NAME)
