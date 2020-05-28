@@ -1,19 +1,10 @@
 stages:
-    - build
     - test
-
-build:
-    stage: build
-    script:
-        - echo "Building"
-        - mkdir build
-        - touch build/info.txt
-    artifacts:
-        paths:
-            - build/
 
 test:
     stage: test
     script:
         - echo "Testing"
-        - test -f "build/info.txt"
+        - apt-get update -qy
+        - apt-get install -y python-dev python-pip
+        - python -m unittest discover -t ./tests
