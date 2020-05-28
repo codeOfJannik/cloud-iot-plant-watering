@@ -7,4 +7,4 @@ test:
         - echo "Testing"
         - apk update
         - apk add --update-cache python3
-        - python3 -m unittest ./tests/test_device_software.py
+        - python3 -m unittest ./tests/test_device_software
