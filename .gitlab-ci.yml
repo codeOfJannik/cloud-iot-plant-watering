@@ -5,6 +5,6 @@ test:
     stage: test
     script:
         - echo "Testing"
-        - apt-get update -qy
-        - apt-get install -y python-dev python-pip
+        - sudo apt-get update -qy
+        - sudo apt-get install -y python-dev python-pip
         - python -m unittest discover -t ./tests
