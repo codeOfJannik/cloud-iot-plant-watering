@@ -36,15 +36,18 @@ class DeviceSoftware(AWSIoTClient):
             try:
                 # get and parse switch state
                 url = '{url}/gpios/{device}'.format(url=self.HARDWARE_URL, device=self.DEVICE_NAME)
-                req = urllib.request.Request(url)
-                with urllib.request.urlopen(req) as f:
-                    if f.status == 200:
-                        data = json.loads(f.read().decode('utf-8'))
-                        # data to IoT Service
-                        message = {'message': "Test from {}".format(self.DEVICE_NAME), 'data': data['state']['value']}
-                        message_json = json.dumps(message)
-                        topic = "bed/sensors/moisture"
-                        self.publish_message_to_topic(message_json, topic, 0)
+                # get current state from gpio
+                data = get_gpio(url=url)
+
+                # data to IoT Service
+                message = {'message': "Test from {}".format(self.DEVICE_NAME), 'data': data['state']['value']}
+                message_json = json.dumps(message)
+                topic = "bed/sensors/moisture"
+                if self.publish_message_to_topic(message_json, topic, 0):
+                    pass
+                else:
+                    return False
+
             except ConnectionRefusedError:
                 print('could not connect to {url}'.format(url=self.HARDWARE_URL))
                 return False
@@ -69,14 +72,12 @@ class DeviceSoftware(AWSIoTClient):
                     # received message:
                     data = json.loads(message.payload)
                     switch_state = data['switch_state']
+
                     # set new switch state
                     url = '{url}/gpios/{device}'.format(url=self.HARDWARE_URL, device=self.DEVICE_NAME)
-                    data = json.dumps({"open": switch_state}).encode('utf-8')
-                    req = urllib.request.Request(url, data=data, method='POST')
-                    with urllib.request.urlopen(req) as f:
-                        if f.status == 200:
-                            return True
-                        return False
+                    data = json.dumps({"open": switch_state})
+                    return set_gpio(url=url, data=data)
+
                 except ConnectionRefusedError:
                     print('could not connect to {url}'.format(url=self.HARDWARE_URL))
                     return False
@@ -90,6 +91,25 @@ class DeviceSoftware(AWSIoTClient):
                 pass
             else:
                 return False
+
+
+"""----helper functions----"""
+
+
+def set_gpio(url: str, data: str) -> bool:
+    req = urllib.request.Request(url, data=data.encode('utf-8'), method='POST')
+    with urllib.request.urlopen(req) as f:
+        if f.status == 200:
+            return True
+        return False
+
+
+def get_gpio(url: str) -> dict:
+    req = urllib.request.Request(url)
+    with urllib.request.urlopen(req) as f:
+        if f.status == 200:
+            data = json.loads(f.read().decode('utf-8'))
+    return data
 
 
 if __name__ == "__main__":
