@@ -1,4 +1,4 @@
-from unittest import TestCase
+from unittest import TestCase, main
 from unittest.mock import patch, PropertyMock
 from devices.chronos_iot.software_class.device_software import DeviceSoftware
 
@@ -50,7 +50,8 @@ class TestDeviceSoftware(TestCase):
     """----aws iot client fail tests----"""
 
     # mock publish message function and simulate failure
-    @patch('devices.chronos_iot.software_class.aws_iot_client.AWSIoTClient.publish_message_to_topic', return_value=False)
+    @patch('devices.chronos_iot.software_class.aws_iot_client.AWSIoTClient.publish_message_to_topic',
+           return_value=False)
     # mock get gpio function and return a fake value
     @patch('devices.chronos_iot.software_class.device_software.get_gpio', return_value={'state': {'value': 50}})
     def test_run_soil_moisture_no_client(self, mock_get, mock_publish):
@@ -99,3 +100,7 @@ class TestDeviceSoftware(TestCase):
         actual = self.device_software.run_water_switch()
         expected = False
         self.assertEqual(expected, actual)
+
+
+if __name__ == "__main__":
+    main()
