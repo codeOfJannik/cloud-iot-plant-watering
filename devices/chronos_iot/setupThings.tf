@@ -44,27 +44,41 @@ resource "aws_iot_policy" "thing_policy" {
 
   policy = <<EOF
 {
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Effect": "Allow",
-        "Action": [
-          "iot:Connect"
-        ],
-        "Resource": [
-          "arn:aws:iot:us-east-1:123456789012:client/${iot:Connection.Thing.ThingName}"
-        ]
-      },
-      {
-        "Effect": "Allow",
-        "Action": [
-          "iot:Subscribe"
-        ],
-        "Resource": [
-          "arn:aws:iot:us-east-1:123456789012:topicfilter/my/topic/filter"
-        ]
-      }
-    ]
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "Stmt1590765234613",
+      "Action": [
+        "iot:Connect"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "arn:aws:iot:us-east-1:666585360781:thing/soilMoisture1_sensor",
+        "arn:aws:iot:us-east-1:666585360781:thing/soilMoisture2_sensor",
+        "arn:aws:iot:us-east-1:666585360781:thing/water_switch"
+      ]
+    },
+    {
+      "Sid": "Stmt1590765273525",
+      "Action": [
+        "iot:Publish"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "arn:aws:iot:us-east-1:666585360781:thing/soilMoisture1_sensor",
+        "arn:aws:iot:us-east-1:666585360781:thing/soilMoisture2_sensor"
+      ]
+    },
+    {
+      "Sid": "Stmt1590765303478",
+      "Action": [
+        "iot:Receive",
+        "iot:Subscribe"
+      ],
+      "Effect": "Allow",
+      "Resource": "arn:aws:iot:us-east-1:666585360781:thing/water_switch"
+    }
+  ]
 }
 EOF
 }
