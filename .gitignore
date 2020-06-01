@@ -44,6 +44,7 @@ awsIoT/soil_moisture_1/aws/test.sh
 devices/chronos_iot/devices/*
 !devices/chronos_iot/devices/*/run.py
 !devices/chronos_iot/devices/*/config.yml
+!devices/chronos_iot/devices/*/policy.json
 
 
 # Created by https://www.gitignore.io/api/python
