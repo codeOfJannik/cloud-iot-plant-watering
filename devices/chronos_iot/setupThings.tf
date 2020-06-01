@@ -1,7 +1,7 @@
 locals {
-    files = fileset(path.cwd, "devices/*/policy.json")
+  files = fileset(path.cwd, "devices/*/policy.json")
 }
- 
+
 provider "aws" {
   profile    = "default"
   region     = "us-east-1"
@@ -36,15 +36,19 @@ resource "aws_iot_certificate" "thing_cert" {
   active = true
 }
 
+data "aws_arn" "thing_instance" {
+  for_each = local.files
+  arn = aws_iot_thing.thing[each.key].arn
+}
 
 resource "aws_iot_policy" "thing_policy" {
   for_each = local.files
   name = "${basename(dirname(each.value))}${var.policy}"
-
-
-  policy = templatefile(
-    each.value, { clientId = aws_iot_thing.thing[each.key].name}
-  ) 
+  policy = templatefile(each.value,  {
+    clientId = aws_iot_thing.thing[each.key].name,
+    arn = "arn:${data.aws_arn.thing_instance[each.key].partition}:${data.aws_arn.thing_instance[each.key].service}:${data.aws_arn.thing_instance[each.key].region}:${data.aws_arn.thing_instance[each.key].account}:"
+  }
+  )
 }
 
 resource "aws_iot_thing_principal_attachment" "att" {
