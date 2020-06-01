@@ -1,0 +1,25 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Sid": "Stmt1590765234613",
+        "Action": [
+          "iot:Connect"
+        ],
+        "Effect": "Allow",
+        "Resource": [
+          "arn:aws:iot:us-east-1:666585360781:client/${clientId}"          
+        ]
+      },
+      {
+        "Sid": "Stmt1590765273525",
+        "Action": [
+          "iot:Publish"
+        ],
+        "Effect": "Allow",
+        "Resource": [
+          "arn:aws:iot:us-east-1:666585360781:topic/bed/sensors/moisture"
+                  ]
+      }
+    ]
+  }
