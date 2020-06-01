@@ -41,11 +41,8 @@ override.tf.json
 
 awsIoT/soil_moisture_1/aws/test.sh
 *.env
-devices/chronos_iot/devices/*
-!devices/chronos_iot/devices/*/run.py
-!devices/chronos_iot/devices/*/config.yml
-!devices/chronos_iot/devices/*/policy.json
-
+*.private.key
+*.crt
 
 # Created by https://www.gitignore.io/api/python
 # Edit at https://www.gitignore.io/?templates=python
