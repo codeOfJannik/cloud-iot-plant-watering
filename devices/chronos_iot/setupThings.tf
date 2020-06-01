@@ -1,7 +1,7 @@
 locals {
-  files = fileset(path.cwd, "devices/*/run.py")
+    files = fileset(path.cwd, "devices/*/policy.json")
 }
-
+ 
 provider "aws" {
   profile    = "default"
   region     = "us-east-1"
@@ -31,58 +31,21 @@ resource "aws_iot_thing" "thing" {
   name = basename(dirname(each.value))
 }
 
-
-
 resource "aws_iot_certificate" "thing_cert" {
   for_each = local.files
   active = true
 }
 
+
 resource "aws_iot_policy" "thing_policy" {
   for_each = local.files
   name = "${basename(dirname(each.value))}${var.policy}"
 
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "Stmt1590765234613",
-      "Action": [
-        "iot:Connect"
-      ],
-      "Effect": "Allow",
-      "Resource": [
-        "arn:aws:iot:us-east-1:666585360781:thing/soilMoisture1_sensor",
-        "arn:aws:iot:us-east-1:666585360781:thing/soilMoisture2_sensor",
-        "arn:aws:iot:us-east-1:666585360781:thing/water_switch"
-      ]
-    },
-    {
-      "Sid": "Stmt1590765273525",
-      "Action": [
-        "iot:Publish"
-      ],
-      "Effect": "Allow",
-      "Resource": [
-        "arn:aws:iot:us-east-1:666585360781:thing/soilMoisture1_sensor",
-        "arn:aws:iot:us-east-1:666585360781:thing/soilMoisture2_sensor"
-      ]
-    },
-    {
-      "Sid": "Stmt1590765303478",
-      "Action": [
-        "iot:Receive",
-        "iot:Subscribe"
-      ],
-      "Effect": "Allow",
-      "Resource": "arn:aws:iot:us-east-1:666585360781:thing/water_switch"
-    }
-  ]
-}
-EOF
-}
 
+  policy = templatefile(
+    each.value, { clientId = aws_iot_thing.thing[each.key].name}
+  ) 
+}
 
 resource "aws_iot_thing_principal_attachment" "att" {
   for_each = local.files
