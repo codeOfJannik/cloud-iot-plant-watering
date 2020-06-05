@@ -7,14 +7,25 @@
       "Resource": "${arn}client/${clientId}"
     },
     {
+      "Action": ["iot:Publish"],
+      "Effect": "Allow",
+      "Resource": "${arn}topic/$aws/things/${clientId}/shadow/update"
+    },
+    {
       "Action": ["iot:Receive"],
       "Effect": "Allow",
-      "Resource": "${arn}topic/bed/switch/water"
+      "Resource": [
+        "${arn}topic/bed/switch/water",
+        "${arn}topic/$aws/things/${clientId}/shadow/update/delta"
+      ]
     },
     {
       "Action": ["iot:Subscribe"],
       "Effect": "Allow",
-      "Resource": "${arn}topicfilter/bed/switch/water"
+      "Resource": [
+        "${arn}topicfilter/bed/switch/water",
+        "${arn}topicfilter/$aws/things/${clientId}/shadow/update/delta"
+      ]
     }
   ]
 }

@@ -61,36 +61,63 @@ class DeviceSoftware(AWSIoTClient):
         :return: [bool] False if exception else repeat
         """
         print(f'Starting software')
-        while self.running:
+        gpio_url = '{url}/gpios/{device}'.format(url=self.HARDWARE_URL, device=self.DEVICE_NAME)
 
-            def custom_callback(client, userdata, message):
-                """
-                Intern callback function to change switch state
-                Parameter determined by AWSIoTPythonSDK
-                """
-                try:
-                    # received message:
-                    data = json.loads(message.payload)
-                    switch_state = data['switch_state']
+        # update device shadow with current state
+        self.update_switch_shadow(gpio_url)
 
-                    # set new switch state
-                    url = '{url}/gpios/{device}'.format(url=self.HARDWARE_URL, device=self.DEVICE_NAME)
-                    data = json.dumps({"open": switch_state})
-                    return set_gpio(url=url, data=data)
+        def custom_callback(client, userdata, message):
+            """
+            Intern callback function to change switch state
+            Parameter determined by AWSIoTPythonSDK
+            """
+            try:
+                # received message:
+                print("Received message")
+                data = json.loads(message.payload)
+                print(data)
+                desired_switch_state = data['state']['switch_open']
 
-                except ConnectionRefusedError:
-                    print('could not connect to {url}'.format(url=self.HARDWARE_URL))
-                    return False
-                except Exception as e:
-                    # print(f'unknown error')
-                    print("change switch state error: {}".format(e))
-                    return False
+                # set new switch state
+                data_message = json.dumps({"open": desired_switch_state})
+                success = set_gpio(url=gpio_url, data=data_message)
 
-            # subscribe to IoT Service and define callback function, return if callback is false, else repeat
-            if self.subscribe_to_topic("bed/switch/water", custom_callback, 0):
-                pass
-            else:
+                # update shadow after changed to new switch state
+                self.update_switch_shadow(gpio_url)
+                return success
+
+            except ConnectionRefusedError:
+                print('could not connect to {url}'.format(url=self.HARDWARE_URL))
                 return False
+            except Exception as e:
+                # print(f'unknown error')
+                print("change switch state error: {}".format(e))
+                return False
+
+        # subscribe to IoT Service and define callback function, return if callback is false, else repeat
+        if self.subscribe_to_topic("$aws/things/{device}/shadow/update/delta".format(device=self.DEVICE_NAME), custom_callback, 0):
+            pass
+        else:
+            return False
+
+        while self.running:
+            pass
+
+    def update_switch_shadow(self, gpio_url):
+        # get switch state
+        switch_data = get_gpio(gpio_url)
+        switch_open = switch_data['state']['open']
+        message = {
+            "state": {
+                "reported": {
+                    "switch_open": switch_open
+                }
+            }
+        }
+        json_messgae = json.dumps(message)
+
+        # publish message to update device shadow with current state
+        self.publish_message_to_topic(json_messgae, "$aws/things/{device}/shadow/update".format(device=self.DEVICE_NAME), 1)
 
 
 """----helper functions----"""
