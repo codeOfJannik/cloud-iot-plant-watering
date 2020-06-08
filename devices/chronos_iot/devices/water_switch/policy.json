@@ -15,7 +15,6 @@
       "Action": ["iot:Receive"],
       "Effect": "Allow",
       "Resource": [
-        "${arn}topic/bed/switch/water",
         "${arn}topic/$aws/things/${clientId}/shadow/update/delta"
       ]
     },
@@ -23,7 +22,6 @@
       "Action": ["iot:Subscribe"],
       "Effect": "Allow",
       "Resource": [
-        "${arn}topicfilter/bed/switch/water",
         "${arn}topicfilter/$aws/things/${clientId}/shadow/update/delta"
       ]
     }
