@@ -114,10 +114,10 @@ class DeviceSoftware(AWSIoTClient):
                 }
             }
         }
-        json_messgae = json.dumps(message)
+        json_message = json.dumps(message)
 
         # publish message to update device shadow with current state
-        self.publish_message_to_topic(json_messgae, "$aws/things/{device}/shadow/update".format(device=self.DEVICE_NAME), 1)
+        self.publish_message_to_topic(json_message, "$aws/things/{device}/shadow/update".format(device=self.DEVICE_NAME), 1)
 
 
 """----helper functions----"""
