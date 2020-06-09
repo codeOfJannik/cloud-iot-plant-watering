@@ -1,7 +1,7 @@
 name: Device3
 gpios:
 
-  water_switch:
+  water_valve:
     type: switch
     state:
       open: true

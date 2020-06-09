@@ -55,7 +55,7 @@ class DeviceSoftware(AWSIoTClient):
                 print(e)
                 return False
 
-    def run_water_switch(self):
+    def run_water_valve(self):
         """
         Subscribe to IoT Service topic and change water switch state
         :return: [bool] False if exception else repeat
@@ -64,7 +64,7 @@ class DeviceSoftware(AWSIoTClient):
         gpio_url = '{url}/gpios/{device}'.format(url=self.HARDWARE_URL, device=self.DEVICE_NAME)
 
         # update device shadow with current state
-        self.update_switch_shadow(gpio_url)
+        self.update_valve_shadow(gpio_url)
 
         def custom_callback(client, userdata, message):
             """
@@ -83,7 +83,7 @@ class DeviceSoftware(AWSIoTClient):
                 success = set_gpio(url=gpio_url, data=data_message)
 
                 # update shadow after changed to new switch state
-                self.update_switch_shadow(gpio_url)
+                self.update_valve_shadow(gpio_url)
                 return success
 
             except ConnectionRefusedError:
@@ -103,7 +103,7 @@ class DeviceSoftware(AWSIoTClient):
         while self.running:
             pass
 
-    def update_switch_shadow(self, gpio_url):
+    def update_valve_shadow(self, gpio_url):
         # get switch state
         switch_data = get_gpio(gpio_url)
         switch_open = switch_data['state']['open']
