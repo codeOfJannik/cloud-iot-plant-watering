@@ -1,15 +1,15 @@
 {
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Action": ["iot:Connect"],
-        "Effect": "Allow",
-        "Resource": "${arn}client/${clientId}"
-      },
-      {
-        "Action": ["iot:Publish"],
-        "Effect": "Allow",
-        "Resource": "${arn}topic/bed/sensors/moisture"
-      }
-    ]
-  }
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": ["iot:Connect"],
+      "Effect": "Allow",
+      "Resource": "${arn}client/${clientId}"
+    },
+    {
+      "Action": ["iot:Publish"],
+      "Effect": "Allow",
+      "Resource": "${arn}topic/$aws/things/${clientId}/shadow/update"
+    }
+  ]
+}

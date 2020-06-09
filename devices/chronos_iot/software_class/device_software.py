@@ -38,15 +38,7 @@ class DeviceSoftware(AWSIoTClient):
                 url = '{url}/gpios/{device}'.format(url=self.HARDWARE_URL, device=self.DEVICE_NAME)
                 # get current state from gpio
                 data = get_gpio(url=url)
-
-                # data to IoT Service
-                message = {'message': "Test from {}".format(self.DEVICE_NAME), 'data': data['state']['value']}
-                message_json = json.dumps(message)
-                topic = "bed/sensors/moisture"
-                if self.publish_message_to_topic(message_json, topic, 0):
-                    pass
-                else:
-                    return False
+                self.update_sensor_shadow(data)
 
             except ConnectionRefusedError:
                 print('could not connect to {url}'.format(url=self.HARDWARE_URL))
@@ -54,6 +46,21 @@ class DeviceSoftware(AWSIoTClient):
             except Exception as e:
                 print(e)
                 return False
+
+    def update_sensor_shadow(self, data):
+        sensor_value = data['state']['value']
+        message = {
+            "state": {
+                "reported": {
+                    "data": sensor_value
+                }
+            }
+        }
+        json_message = json.dumps(message)
+
+        # publish message to update device shadow with current value
+        self.publish_message_to_topic(json_message, "$aws/things/{device}/shadow/update".format(device=self.DEVICE_NAME), 1)
+
 
     def run_water_valve(self):
         """
@@ -104,13 +111,13 @@ class DeviceSoftware(AWSIoTClient):
             pass
 
     def update_valve_shadow(self, gpio_url):
-        # get switch state
-        switch_data = get_gpio(gpio_url)
-        switch_open = switch_data['state']['open']
+        # get valve state
+        valve_data = get_gpio(gpio_url)
+        valve_open = valve_data['state']['open']
         message = {
             "state": {
                 "reported": {
-                    "switch_open": switch_open
+                    "switch_open": valve_open
                 }
             }
         }
