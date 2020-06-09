@@ -70,9 +70,6 @@ class DeviceSoftware(AWSIoTClient):
         print(f'Starting software')
         gpio_url = '{url}/gpios/{device}'.format(url=self.HARDWARE_URL, device=self.DEVICE_NAME)
 
-        # update device shadow with current state
-        self.update_valve_shadow(gpio_url)
-
         def custom_callback(client, userdata, message):
             """
             Intern callback function to change switch state
@@ -101,10 +98,20 @@ class DeviceSoftware(AWSIoTClient):
                 print("change switch state error: {}".format(e))
                 return False
 
-        # subscribe to IoT Service and define callback function, return if callback is false, else repeat
-        if self.subscribe_to_topic("$aws/things/{device}/shadow/update/delta".format(device=self.DEVICE_NAME), custom_callback, 0):
-            pass
-        else:
+        try:
+            # update device shadow with current state
+            self.update_valve_shadow(gpio_url)
+            # subscribe to IoT Service and define callback function, return if callback is false, else repeat
+            if self.subscribe_to_topic("$aws/things/{device}/shadow/update/delta".format(device=self.DEVICE_NAME), custom_callback, 0):
+                pass
+            else:
+                return False
+        except ConnectionRefusedError:
+            print('could not connect to {url}'.format(url=self.HARDWARE_URL))
+            return False
+        except Exception as e:
+            # print(f'unknown error')
+            print("change switch state error: {}".format(e))
             return False
 
         while self.running:
