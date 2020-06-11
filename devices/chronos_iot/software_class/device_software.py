@@ -39,8 +39,10 @@ class DeviceSoftware(AWSIoTClient):
                 # get current state from gpio
                 data = get_gpio(url=url)
 
-                # data to IoT Service
-                message = {'message': "Test from {}".format(self.DEVICE_NAME), 'data': data['state']['value']}
+                message = {
+                    'sensor_id': self.DEVICE_NAME,
+                    'data': data['state']['value']
+                }
                 message_json = json.dumps(message)
                 topic = "bed/sensors/moisture"
                 if self.publish_message_to_topic(message_json, topic, 0):
