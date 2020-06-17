@@ -17,6 +17,7 @@ services:
       - "./software_class/:/usr/src/app/software_class/"
     environment:
       HARDWARE_URL: http://soilmoisture1_emulator:9292
+      FIELDNUMBER: 1
       DEVICE_NAME: soilMoisture1_sensor
       INTERVAL_TIME: 30
       AWS_IOT_ENDPOINT: ${AWS_ENDPOINT}
@@ -38,30 +39,11 @@ services:
       - "./software_class/:/usr/src/app/software_class/"
     environment:
       HARDWARE_URL: http://soilmoisture2_emulator:9292
+      FIELDNUMBER: 1
       DEVICE_NAME: soilMoisture2_sensor
       INTERVAL_TIME: 30
       AWS_IOT_ENDPOINT: ${AWS_ENDPOINT}
       PYTHONUNBUFFERED: 1
-
-#  switch1_emulator:
-#    image: csiot/emulator
-#    ports:
-#      - "127.0.0.1:5557:9292"
-#    volumes:
-#      - "./devices/water_switch/config.yaml:/emulator/config.yaml"
-#
-#  switch1_software:
-#    build:
-#      context: devices/water_switch
-#      dockerfile: ../../Dockerfile
-#    volumes:
-#      - "./devices/water_switch/:/usr/src/app/"
-#      - "./software_class/:/usr/src/app/software_class/"
-#    environment:
-#      HARDWARE_URL: http://switch1_emulator:9292
-#      DEVICE_NAME: water_switch
-#      AWS_IOT_ENDPOINT: ${AWS_ENDPOINT}
-#      PYTHONUNBUFFERED: 1
 
   valve_emulator:
     image: csiot/emulator
@@ -79,6 +61,7 @@ services:
       - "./software_class/:/usr/src/app/software_class/"
     environment:
       HARDWARE_URL: http://valve_emulator:9292
+      FIELDNUMBER: 1
       DEVICE_NAME: water_valve
       AWS_IOT_ENDPOINT: ${AWS_ENDPOINT}
       PYTHONUNBUFFERED: 1

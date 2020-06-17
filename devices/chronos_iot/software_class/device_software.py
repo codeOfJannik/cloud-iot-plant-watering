@@ -11,11 +11,13 @@ class DeviceSoftware(AWSIoTClient):
         Class to run device software in a loop
         :param credentials_directory: defines, where to find the aws device credentials for IoT Service
         """
+        # TODO: how is topic for publishing messages designed? (build from attributes or predefined topic?)
         # set run loop value, need for unittests, value because can set f.e. range(10, -1, -1) to run 10 times
         self.running = 1
         # get environment variables (set in docker-compose file)
         self.HARDWARE_URL = os.getenv('HARDWARE_URL')
         self.DEVICE_NAME = os.getenv('DEVICE_NAME')
+        self.FIELD_NUMBER = os.getenv("FIELDNUMBER")
         self.INTERVAL_TIME = int(os.getenv('INTERVAL_TIME', default=3))
         # set aws client variables
         self.credentials_directory = credentials_directory
@@ -47,6 +49,16 @@ class DeviceSoftware(AWSIoTClient):
             except Exception as e:
                 print(e)
                 return False
+
+    def publish_sensor_value(self, data, topic):
+        sensor_value = data['state']['value']
+        message = {
+            'sensor_id': self.DEVICE_NAME,
+            'sensor_value': sensor_value
+        }
+        json_message = json.dumps(message)
+
+        self.publish_message_to_topic(json_message, topic, 0)
 
     def update_sensor_shadow(self, data):
         sensor_value = data['state']['value']
