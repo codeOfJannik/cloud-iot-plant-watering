@@ -11,11 +11,13 @@ class DeviceSoftware(AWSIoTClient):
         Class to run device software in a loop
         :param credentials_directory: defines, where to find the aws device credentials for IoT Service
         """
+        # TODO: how is topic for publishing messages designed? (build from attributes or predefined topic?)
         # set run loop value, need for unittests, value because can set f.e. range(10, -1, -1) to run 10 times
         self.running = 1
         # get environment variables (set in docker-compose file)
         self.HARDWARE_URL = os.getenv('HARDWARE_URL')
         self.DEVICE_NAME = os.getenv('DEVICE_NAME')
+        self.FIELD_NUMBER = os.getenv("FIELDNUMBER")
         self.INTERVAL_TIME = int(os.getenv('INTERVAL_TIME', default=3))
         # set aws client variables
         self.credentials_directory = credentials_directory
@@ -24,7 +26,7 @@ class DeviceSoftware(AWSIoTClient):
         self.private_key = os.path.abspath(self.credentials_directory + self.DEVICE_NAME + ".private.key")
         super().__init__(self.root_ca, self.certificate, self.private_key, self.DEVICE_NAME)
 
-    def run_soil_moisture(self):
+    def run_update_data(self, topic=None):
         """
         Get sensor data from hardware url and publish message in IoT Service
         :return: [bool] False if exception else repeat
@@ -40,6 +42,8 @@ class DeviceSoftware(AWSIoTClient):
                 data = get_gpio(url=url)
 
                 self.update_sensor_shadow(data)
+                if topic:
+                    self.publish_sensor_value(data, topic)
 
             except ConnectionRefusedError:
                 print('could not connect to {url}'.format(url=self.HARDWARE_URL))
@@ -47,6 +51,10 @@ class DeviceSoftware(AWSIoTClient):
             except Exception as e:
                 print(e)
                 return False
+
+    def publish_sensor_value(self, data, topic):
+        json_message = json.dumps(data)
+        self.publish_message_to_topic(json_message, topic, 0)
 
     def update_sensor_shadow(self, data):
         message = {
