@@ -26,7 +26,7 @@ class DeviceSoftware(AWSIoTClient):
         self.private_key = os.path.abspath(self.credentials_directory + self.DEVICE_NAME + ".private.key")
         super().__init__(self.root_ca, self.certificate, self.private_key, self.DEVICE_NAME)
 
-    def run_soil_moisture(self):
+    def run_update_data(self, topic=None):
         """
         Get sensor data from hardware url and publish message in IoT Service
         :return: [bool] False if exception else repeat
@@ -42,6 +42,8 @@ class DeviceSoftware(AWSIoTClient):
                 data = get_gpio(url=url)
 
                 self.update_sensor_shadow(data)
+                if topic:
+                    self.publish_sensor_value(data, topic)
 
             except ConnectionRefusedError:
                 print('could not connect to {url}'.format(url=self.HARDWARE_URL))
@@ -51,13 +53,7 @@ class DeviceSoftware(AWSIoTClient):
                 return False
 
     def publish_sensor_value(self, data, topic):
-        sensor_value = data['state']['value']
-        message = {
-            'sensor_id': self.DEVICE_NAME,
-            'sensor_value': sensor_value
-        }
-        json_message = json.dumps(message)
-
+        json_message = json.dumps(data)
         self.publish_message_to_topic(json_message, topic, 0)
 
     def update_sensor_shadow(self, data):
