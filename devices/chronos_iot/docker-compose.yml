@@ -38,7 +38,6 @@ services:
       - "./software_class/:/usr/src/app/software_class/"
     environment:
       HARDWARE_URL: http://soilmoisture1_emulator:9292
-      FIELDNUMBER: 1
       DEVICE_NAME: soilMoisture1_sensor
       INTERVAL_TIME: 30
       AWS_IOT_ENDPOINT: ${AWS_ENDPOINT}
@@ -60,7 +59,6 @@ services:
       - "./software_class/:/usr/src/app/software_class/"
     environment:
       HARDWARE_URL: http://soilmoisture2_emulator:9292
-      FIELDNUMBER: 1
       DEVICE_NAME: soilMoisture2_sensor
       INTERVAL_TIME: 30
       AWS_IOT_ENDPOINT: ${AWS_ENDPOINT}
@@ -82,7 +80,6 @@ services:
       - "./software_class/:/usr/src/app/software_class/"
     environment:
       HARDWARE_URL: http://valve_emulator:9292
-      FIELDNUMBER: 1
       DEVICE_NAME: water_valve
       AWS_IOT_ENDPOINT: ${AWS_ENDPOINT}
       PYTHONUNBUFFERED: 1

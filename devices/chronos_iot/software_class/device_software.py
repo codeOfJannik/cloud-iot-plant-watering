@@ -17,7 +17,6 @@ class DeviceSoftware(AWSIoTClient):
         # get environment variables (set in docker-compose file)
         self.HARDWARE_URL = os.getenv('HARDWARE_URL')
         self.DEVICE_NAME = os.getenv('DEVICE_NAME')
-        self.FIELD_NUMBER = os.getenv("FIELDNUMBER")
         self.INTERVAL_TIME = int(os.getenv('INTERVAL_TIME', default=3))
         # set aws client variables
         self.credentials_directory = credentials_directory
@@ -85,9 +84,7 @@ class DeviceSoftware(AWSIoTClient):
             """
             try:
                 # received message:
-                print("Received message")
                 data = json.loads(message.payload)
-                print(data)
                 desired_switch_state = data['state']['switch_open']
 
                 # set new switch state
