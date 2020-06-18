@@ -35,7 +35,7 @@ class DeviceSoftware(AWSIoTClient):
             time.sleep(self.INTERVAL_TIME)
             try:
                 # get and parse switch state
-                url = '{url}/gpios/{device}'.format(url=self.HARDWARE_URL, device=self.DEVICE_NAME)
+                url = '{url}/gpios'.format(url=self.HARDWARE_URL)
                 # get current state from gpio
                 data = get_gpio(url=url)
 
@@ -49,11 +49,10 @@ class DeviceSoftware(AWSIoTClient):
                 return False
 
     def update_sensor_shadow(self, data):
-        sensor_value = data['state']['value']
         message = {
             "state": {
                 "reported": {
-                    "data": sensor_value
+                    "data": data
                 }
             }
         }
