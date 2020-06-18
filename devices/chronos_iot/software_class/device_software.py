@@ -6,12 +6,11 @@ from .aws_iot_client import AWSIoTClient
 
 
 class DeviceSoftware(AWSIoTClient):
-    def __init__(self, credentials_directory: str = "../app/"):
+    def __init__(self, cert_directory: str = "../cert/"):
         """
         Class to run device software in a loop
         :param credentials_directory: defines, where to find the aws device credentials for IoT Service
         """
-        # TODO: how is topic for publishing messages designed? (build from attributes or predefined topic?)
         # set run loop value, need for unittests, value because can set f.e. range(10, -1, -1) to run 10 times
         self.running = 1
         # get environment variables (set in docker-compose file)
@@ -19,10 +18,9 @@ class DeviceSoftware(AWSIoTClient):
         self.DEVICE_NAME = os.getenv('DEVICE_NAME')
         self.INTERVAL_TIME = int(os.getenv('INTERVAL_TIME', default=3))
         # set aws client variables
-        self.credentials_directory = credentials_directory
-        self.root_ca = os.path.abspath("root-CA.crt")
-        self.certificate = os.path.abspath(self.credentials_directory + self.DEVICE_NAME + ".cert.pem")
-        self.private_key = os.path.abspath(self.credentials_directory + self.DEVICE_NAME + ".private.key")
+        self.root_ca = os.path.abspath(cert_directory + "root-CA.crt")
+        self.certificate = os.path.abspath(self.DEVICE_NAME + ".cert.pem")
+        self.private_key = os.path.abspath(self.DEVICE_NAME + ".private.key")
         super().__init__(self.root_ca, self.certificate, self.private_key, self.DEVICE_NAME)
 
     def run_update_data(self, topic=None):

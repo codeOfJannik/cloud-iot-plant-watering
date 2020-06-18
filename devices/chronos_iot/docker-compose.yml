@@ -16,7 +16,7 @@ services:
       - "./devices/control_panel/:/usr/src/app/"
       - "./software_class/:/usr/src/app/software_class/"
     environment:
-      HARDWARE_URL: http://soilmoisture_threshold_emulator:9292
+      HARDWARE_URL: http://control_panel_emulator:9292
       DEVICE_NAME: control_panel
       INTERVAL_TIME: 30
       AWS_IOT_ENDPOINT: ${AWS_ENDPOINT}
