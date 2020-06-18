@@ -53,7 +53,7 @@ class DeviceSoftware(AWSIoTClient):
 
     def publish_sensor_value(self, data, topic):
         json_message = json.dumps(data)
-        self.publish_message_to_topic(json_message, topic, 0)
+        self.publish_message_to_topic(json_message, topic + self.DEVICE_NAME, 0)
 
     def update_sensor_shadow(self, data):
         message = {

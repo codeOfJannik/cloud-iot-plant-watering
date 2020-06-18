@@ -11,7 +11,7 @@
       "Effect": "Allow",
       "Resource": [
         "${arn}topic/$aws/things/${clientId}/shadow/update",
-        "topic/beds/1/sensors/soilMoisture/${clientId}"
+        "${arn}topic/beds/1/sensors/soilMoisture/${clientId}"
       ]
     }
   ]
