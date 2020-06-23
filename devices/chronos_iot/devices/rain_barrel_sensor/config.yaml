@@ -1,0 +1,20 @@
+name: Device4
+gpios:
+
+  rain_barrel_sensor:
+    type: sensor
+    state:
+      # the initial value
+      value: 50
+      
+      # the minimal value
+      min: 0
+      
+      # the maximum value
+      max: 100
+      
+      # the step-size if the value goes up or down
+      increment: 1
+      
+      # the unit (UI only, empty string for unitless)
+      unit: "level (%)"
