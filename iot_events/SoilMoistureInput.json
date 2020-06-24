@@ -1,0 +1,14 @@
+{
+  "data": {
+    "id": "soilMoisture1_sensor",
+    "type": "sensor",
+    "direction": "input",
+    "state": {
+      "value": 50,
+      "min": 0,
+      "max": 300,
+      "increment": 1,
+      "unit": "nFk (%)"
+    }
+  }
+}
