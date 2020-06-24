@@ -3,7 +3,7 @@ locals {
 }
 
 provider "aws" {
-  profile    = "default"
+  profile    = "chronos"
   region     = "us-east-1"
 }
 

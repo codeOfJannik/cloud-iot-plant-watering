@@ -9,10 +9,8 @@
     {
       "Action": ["iot:Publish"],
       "Effect": "Allow",
-      "Resource": [
-        "${arn}topic/$aws/things/${clientId}/shadow/update",
-        "${arn}topic/beds/1/sensors/soilMoisture/${clientId}"
-      ]
+      "Resource": "${arn}topic/$aws/things/${clientId}/shadow/update"
     }
   ]
 }
+

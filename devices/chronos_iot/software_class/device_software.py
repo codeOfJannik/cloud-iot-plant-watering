@@ -6,7 +6,7 @@ from .aws_iot_client import AWSIoTClient
 
 
 class DeviceSoftware(AWSIoTClient):
-    def __init__(self, credentials_directory: str = "../app/"):
+    def __init__(self, cert_directory: str = "../cert/"):
         """
         Class to run device software in a loop
         :param credentials_directory: defines, where to find the aws device credentials for IoT Service
@@ -18,13 +18,12 @@ class DeviceSoftware(AWSIoTClient):
         self.DEVICE_NAME = os.getenv('DEVICE_NAME')
         self.INTERVAL_TIME = int(os.getenv('INTERVAL_TIME', default=3))
         # set aws client variables
-        self.credentials_directory = credentials_directory
-        self.root_ca = os.path.abspath("root-CA.crt")
-        self.certificate = os.path.abspath(self.credentials_directory + self.DEVICE_NAME + ".cert.pem")
-        self.private_key = os.path.abspath(self.credentials_directory + self.DEVICE_NAME + ".private.key")
+        self.root_ca = os.path.abspath(cert_directory + "root-CA.crt")
+        self.certificate = os.path.abspath(self.DEVICE_NAME + ".cert.pem")
+        self.private_key = os.path.abspath(self.DEVICE_NAME + ".private.key")
         super().__init__(self.root_ca, self.certificate, self.private_key, self.DEVICE_NAME)
 
-    def run_soil_moisture(self):
+    def run_update_data(self, topic=None):
         """
         Get sensor data from hardware url and publish message in IoT Service
         :return: [bool] False if exception else repeat
@@ -35,11 +34,13 @@ class DeviceSoftware(AWSIoTClient):
             time.sleep(self.INTERVAL_TIME)
             try:
                 # get and parse switch state
-                url = '{url}/gpios/{device}'.format(url=self.HARDWARE_URL, device=self.DEVICE_NAME)
+                url = '{url}/gpios'.format(url=self.HARDWARE_URL)
                 # get current state from gpio
                 data = get_gpio(url=url)
 
                 self.update_sensor_shadow(data)
+                if topic:
+                    self.publish_sensor_value(data, topic)
 
             except ConnectionRefusedError:
                 print('could not connect to {url}'.format(url=self.HARDWARE_URL))
@@ -48,12 +49,18 @@ class DeviceSoftware(AWSIoTClient):
                 print(e)
                 return False
 
+    def publish_sensor_value(self, data, topic):
+        values = data.values()
+        value_iterator = iter(values)
+        content = next(value_iterator)
+        json_message = json.dumps(content)
+        self.publish_message_to_topic(json_message, topic + self.DEVICE_NAME, 0)
+
     def update_sensor_shadow(self, data):
-        sensor_value = data['state']['value']
         message = {
             "state": {
                 "reported": {
-                    "data": sensor_value
+                    "data": data
                 }
             }
         }
@@ -78,9 +85,7 @@ class DeviceSoftware(AWSIoTClient):
             """
             try:
                 # received message:
-                print("Received message")
                 data = json.loads(message.payload)
-                print(data)
                 desired_switch_state = data['state']['switch_open']
 
                 # set new switch state

@@ -1,6 +1,27 @@
 version: "3"
 services:
 
+  control_panel_emulator:
+    image: csiot/emulator
+    ports:
+      - "127.0.0.1:5558:9292"
+    volumes:
+      - "./devices/control_panel/config.yaml:/emulator/config.yaml"
+
+  control_panel_software:
+    build:
+      context: devices/control_panel
+      dockerfile: ../../Dockerfile
+    volumes:
+      - "./devices/control_panel/:/usr/src/app/"
+      - "./software_class/:/usr/src/app/software_class/"
+    environment:
+      HARDWARE_URL: http://control_panel_emulator:9292
+      DEVICE_NAME: control_panel
+      INTERVAL_TIME: 30
+      AWS_IOT_ENDPOINT: ${AWS_ENDPOINT}
+      PYTHONUNBUFFERED: 1
+
   soilmoisture1_emulator:
     image: csiot/emulator
     ports:
@@ -43,6 +64,7 @@ services:
       AWS_IOT_ENDPOINT: ${AWS_ENDPOINT}
       PYTHONUNBUFFERED: 1
 
+<<<<<<< HEAD
   rain_barrel_sensor_emulator:
     image: csiot/emulator    
     ports:
@@ -84,6 +106,8 @@ services:
 #      AWS_IOT_ENDPOINT: ${AWS_ENDPOINT}
 #      PYTHONUNBUFFERED: 1
 
+=======
+>>>>>>> 1f52d5ffdca75858c6b6e673d9e8c758457a2e29
   valve_emulator:
     image: csiot/emulator
     ports:
