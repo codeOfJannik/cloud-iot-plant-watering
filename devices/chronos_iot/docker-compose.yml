@@ -64,6 +64,50 @@ services:
       AWS_IOT_ENDPOINT: ${AWS_ENDPOINT}
       PYTHONUNBUFFERED: 1
 
+<<<<<<< HEAD
+  rain_barrel_sensor_emulator:
+    image: csiot/emulator    
+    ports:
+      - "127.0.0.1:5558:9292"
+    volumes:
+      - "./devices/rain_barrel_sensor/config.yaml:/emulator/config.yaml"
+
+  rain_barrel_sensor_software:
+    build:
+      context: devices/rain_barrel_sensor
+      dockerfile: ../../Dockerfile
+    volumes:
+       - "./devices/rain_barrel_sensor/:/usr/src/app/"
+       - "./software_class/:/usr/src/app/software_class/"
+    environment:
+       HARDWARE_URL: http://rain_barrel_sensor:9292
+       DEVICE_NAME: rain_barrel_sensor
+       INTERVAL_TIME: 30
+       AWS_IOT_ENDPOINT: ${AWS_ENDPOINT}
+       PYTHONUNBUFFERED: 1
+     
+#  switch1_emulator:
+#    image: csiot/emulator
+#    ports:
+#      - "127.0.0.1:5557:9292"
+#    volumes:
+#      - "./devices/water_switch/config.yaml:/emulator/config.yaml"
+#
+#  switch1_software:
+#    build:
+#      context: devices/water_switch
+#      dockerfile: ../../Dockerfile
+#    volumes:
+#      - "./devices/water_switch/:/usr/src/app/"
+#      - "./software_class/:/usr/src/app/software_class/"
+#    environment:
+#      HARDWARE_URL: http://switch1_emulator:9292
+#      DEVICE_NAME: water_switch
+#      AWS_IOT_ENDPOINT: ${AWS_ENDPOINT}
+#      PYTHONUNBUFFERED: 1
+
+=======
+>>>>>>> 1f52d5ffdca75858c6b6e673d9e8c758457a2e29
   valve_emulator:
     image: csiot/emulator
     ports:
