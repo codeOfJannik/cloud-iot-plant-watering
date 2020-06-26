@@ -5,3 +5,8 @@ gpios:
     type: switch
     state:
       open: true
+
+  rain_barrel_valve:
+    type: switch
+    state:
+      open: true

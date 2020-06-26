@@ -9,7 +9,7 @@ class DeviceSoftware(AWSIoTClient):
     def __init__(self, cert_directory: str = "../cert/"):
         """
         Class to run device software in a loop
-        :param credentials_directory: defines, where to find the aws device credentials for IoT Service
+        :param cert_directory: defines, where to find the aws root cert for IoT Service
         """
         # set run loop value, need for unittests, value because can set f.e. range(10, -1, -1) to run 10 times
         self.running = 1
@@ -60,14 +60,13 @@ class DeviceSoftware(AWSIoTClient):
         # publish message to update device shadow with current value
         self.publish_message_to_topic(json_message, "$aws/things/{device}/shadow/update".format(device=self.DEVICE_NAME), 0)
 
-
     def run_water_valve(self):
         """
         Subscribe to IoT Service topic and change water switch state
         :return: [bool] False if exception else repeat
         """
         print(f'Starting software')
-        gpio_url = '{url}/gpios/{device}'.format(url=self.HARDWARE_URL, device=self.DEVICE_NAME)
+        url = '{url}/gpios'.format(url=self.HARDWARE_URL)
 
         def custom_callback(client, userdata, message):
             """
@@ -76,16 +75,20 @@ class DeviceSoftware(AWSIoTClient):
             """
             try:
                 # received message:
-                data = json.loads(message.payload)
-                desired_switch_state = data['state']['switch_open']
-
-                # set new switch state
-                data_message = json.dumps({"open": desired_switch_state})
-                success = set_gpio(url=gpio_url, data=data_message)
+                received_data = json.loads(message.payload)
+                desired_switch_state = received_data['state']
+                if 'water_valve_open' in desired_switch_state:
+                    data_message = json.dumps({"open": not desired_switch_state['water_valve_open']})
+                    water_valve_url = url+"/water_valve"
+                    set_gpio(url=water_valve_url, data=data_message)
+                if 'rain_barrel_valve_open' in desired_switch_state:
+                    data_message = json.dumps({"open": not desired_switch_state['rain_barrel_valve_open']})
+                    water_valve_url = url+"/rain_barrel_valve"
+                    set_gpio(url=water_valve_url, data=data_message)
 
                 # update shadow after changed to new switch state
-                self.update_valve_shadow(gpio_url)
-                return success
+                updated_data = get_gpio(url=url)
+                self.update_valve_shadow(updated_data)
 
             except ConnectionRefusedError:
                 print('could not connect to {url}'.format(url=self.HARDWARE_URL))
@@ -96,8 +99,10 @@ class DeviceSoftware(AWSIoTClient):
                 return False
 
         try:
+            # get current state from gpio
+            data = get_gpio(url=url)
             # update device shadow with current state
-            self.update_valve_shadow(gpio_url)
+            self.update_valve_shadow(data)
             # subscribe to IoT Service and define callback function, return if callback is false, else repeat
             if self.subscribe_to_topic("$aws/things/{device}/shadow/update/delta".format(device=self.DEVICE_NAME), custom_callback, 0):
                 pass
@@ -114,14 +119,15 @@ class DeviceSoftware(AWSIoTClient):
         while self.running:
             pass
 
-    def update_valve_shadow(self, gpio_url):
+    def update_valve_shadow(self, data):
         # get valve state
-        valve_data = get_gpio(gpio_url)
-        valve_open = valve_data['state']['open']
+        water_valve_open = not data['water_valve']['state']['open']
+        rain_barrel_valve_open = not data['rain_barrel_valve']['state']['open']
         message = {
             "state": {
                 "reported": {
-                    "switch_open": valve_open
+                    "water_valve_open": water_valve_open,
+                    "rain_barrel_valve_open": rain_barrel_valve_open
                 }
             }
         }

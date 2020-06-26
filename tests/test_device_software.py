@@ -41,7 +41,7 @@ class TestDeviceSoftware(TestCase):
     # mock set gpio function and return True
     @patch('devices.chronos_iot.software_class.device_software.set_gpio', return_value=True)
     @patch('devices.chronos_iot.software_class.aws_iot_client.AWSIoTClient.publish_message_to_topic', return_value=True)
-    @patch('devices.chronos_iot.software_class.device_software.get_gpio', return_value={'state': {'open': True}})
+    @patch('devices.chronos_iot.software_class.device_software.get_gpio', return_value={"water_valve":{"id":"water_valve","type":"switch","direction":"input","state":{"open":True}},"rain_barrel_valve":{"id":"rain_barrel_valve","type":"switch","direction":"input","state":{"open":True}}})
     def test_run_water_valve(self, mock_get, mock_publish, mock_set, mock_subscribe):
         print('\ntest_run_water_valve:')
         # run loop only once:
@@ -70,7 +70,7 @@ class TestDeviceSoftware(TestCase):
 
     # mocking AWSIoTClient is None
     @patch('devices.chronos_iot.software_class.aws_iot_client.AWSIoTClient', return_value=None)
-    @patch('devices.chronos_iot.software_class.device_software.get_gpio', return_value={'state': {'open': True}})
+    @patch('devices.chronos_iot.software_class.device_software.get_gpio', return_value={"water_valve":{"id":"water_valve","type":"switch","direction":"input","state":{"open":True}},"rain_barrel_valve":{"id":"rain_barrel_valve","type":"switch","direction":"input","state":{"open":True}}})
     def test_run_water_valve_no_client(self, mock_get, mock_client):
         print('\ntest_run_water_valve_no_IoT_client:')
         # run loop only once:
