@@ -39,8 +39,6 @@ class DeviceSoftware(AWSIoTClient):
                 data = get_gpio(url=url)
 
                 self.update_sensor_shadow(data)
-                if topic:
-                    self.publish_sensor_value(data, topic)
 
             except ConnectionRefusedError:
                 print('could not connect to {url}'.format(url=self.HARDWARE_URL))
@@ -48,13 +46,6 @@ class DeviceSoftware(AWSIoTClient):
             except Exception as e:
                 print(e)
                 return False
-
-    def publish_sensor_value(self, data, topic):
-        values = data.values()
-        value_iterator = iter(values)
-        content = next(value_iterator)
-        json_message = json.dumps(content)
-        self.publish_message_to_topic(json_message, topic + self.DEVICE_NAME, 0)
 
     def update_sensor_shadow(self, data):
         message = {
@@ -67,7 +58,7 @@ class DeviceSoftware(AWSIoTClient):
         json_message = json.dumps(message)
 
         # publish message to update device shadow with current value
-        self.publish_message_to_topic(json_message, "$aws/things/{device}/shadow/update".format(device=self.DEVICE_NAME), 1)
+        self.publish_message_to_topic(json_message, "$aws/things/{device}/shadow/update".format(device=self.DEVICE_NAME), 0)
 
 
     def run_water_valve(self):
@@ -137,7 +128,7 @@ class DeviceSoftware(AWSIoTClient):
         json_message = json.dumps(message)
 
         # publish message to update device shadow with current state
-        self.publish_message_to_topic(json_message, "$aws/things/{device}/shadow/update".format(device=self.DEVICE_NAME), 1)
+        self.publish_message_to_topic(json_message, "$aws/things/{device}/shadow/update".format(device=self.DEVICE_NAME), 0)
 
 
 """----helper functions----"""
