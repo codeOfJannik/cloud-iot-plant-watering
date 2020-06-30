@@ -1,3 +1,7 @@
+locals {
+  files = fileset(path.cwd, "/devices/*/policy.json")
+}
+
 variable "policy" {
   type = string
   default = "_policy"
