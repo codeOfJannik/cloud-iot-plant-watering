@@ -1,27 +1,3 @@
-locals {
-  files = fileset(path.cwd, "devices/*/policy.json")
-}
-
-provider "aws" {
-  profile    = "chronos"
-  region     = "us-east-1"
-}
-
-variable "policy" {
-  type = string
-  default = "_policy"
-}
-
-variable "cert_file_ending" {
-  type = string
-  default = ".cert.pem"
-}
-
-variable "private_key_ending" {
-  type = string
-  default = ".private.key"
-}
-
 data "aws_iot_endpoint" "endpointUrl" {
   endpoint_type = "iot:Data-ATS"
 }
@@ -80,26 +56,4 @@ resource "local_file" "thing_key_pem" {
 resource "local_file" "aws_endpoint" {
   filename = ".env"
   content = "AWS_ENDPOINT=${data.aws_iot_endpoint.endpointUrl.endpoint_address}"
-}
-
-resource "null_resource" "start_docker_containers" {
-
-  depends_on = [
-    aws_iot_thing.thing,
-    aws_iot_policy_attachment.att,
-    aws_iot_thing_principal_attachment.att,
-    aws_iot_certificate.thing_cert,
-    local_file.aws_endpoint,
-    local_file.thing_cert_pem,
-    local_file.thing_key_pem
-  ]
-
-  provisioner "local-exec" {
-    command = "docker-compose up --build -d"
-  }
-
-  provisioner "local-exec" {
-    when    = destroy
-    command = "docker-compose down"
-  }
 }

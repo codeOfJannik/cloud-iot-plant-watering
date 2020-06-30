@@ -1,0 +1,28 @@
+{
+        "data": {
+          "bed_1_soilMoisture_threshold": {
+            "id": "bed_1_soilMoisture_threshold",
+            "type": "sensor",
+            "direction": "input",
+            "state": {
+              "value": 50,
+              "min": 0,
+              "max": 300,
+              "increment": 1,
+              "unit": "nFk (%)"
+            }
+          },
+          "bed_2_soilMoisture_threshold": {
+            "id": "bed_2_soilMoisture_threshold",
+            "type": "sensor",
+            "direction": "input",
+            "state": {
+              "value": 60,
+              "min": 0,
+              "max": 300,
+              "increment": 1,
+              "unit": "nFk (%)"
+            }
+          }
+        }
+}
