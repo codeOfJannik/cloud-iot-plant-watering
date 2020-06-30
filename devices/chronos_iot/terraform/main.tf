@@ -1,5 +1,5 @@
 locals {
-  files = fileset(path.cwd, "devices/*/policy.json")
+  files = fileset(path.cwd, "/devices/*/policy.json")
 }
 
 provider "aws" {
