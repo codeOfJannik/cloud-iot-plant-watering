@@ -1,6 +1,6 @@
 from unittest import TestCase, main
 from unittest.mock import patch, PropertyMock
-from devices.chronos_iot.software_class.device_software import DeviceSoftware
+from iot_core.software_class.device_software import DeviceSoftware
 
 
 def test_function():
@@ -14,7 +14,7 @@ class TestDeviceSoftware(TestCase):
     # set sample env variables
     @patch.dict('os.environ', {'HARDWARE_URL': "http://soilmoisture1_emulator:9292",
                                'DEVICE_NAME': "soilMoisture1_sensor"})
-    @patch('devices.chronos_iot.software_class.device_software.super')
+    @patch('iot_core.software_class.device_software.super')
     def setUpClass(cls, mock_super):
         print('Create DeviceSoftware class')
         # call class and skip super init
@@ -23,9 +23,9 @@ class TestDeviceSoftware(TestCase):
     """----success tests----"""
 
     # mock publish message function and return True
-    @patch('devices.chronos_iot.software_class.aws_iot_client.AWSIoTClient.publish_message_to_topic', return_value=True)
+    @patch('iot_core.software_class.aws_iot_client.AWSIoTClient.publish_message_to_topic', return_value=True)
     # mock get gpio function and return a fake value
-    @patch('devices.chronos_iot.software_class.device_software.get_gpio', return_value={'state': {'value': 50}})
+    @patch('iot_core.software_class.device_software.get_gpio', return_value={'state': {'value': 50}})
     def test_run_soil_moisture(self, mock_get, mock_publish):
         print('\ntest_run_soil_moisture:')
         # run loop only once:
@@ -37,11 +37,11 @@ class TestDeviceSoftware(TestCase):
         self.assertEqual(expected, actual)
 
     # mock subscribe function and return True
-    @patch('devices.chronos_iot.software_class.aws_iot_client.AWSIoTClient.subscribe_to_topic', return_value=True)
+    @patch('iot_core.software_class.aws_iot_client.AWSIoTClient.subscribe_to_topic', return_value=True)
     # mock set gpio function and return True
-    @patch('devices.chronos_iot.software_class.device_software.set_gpio', return_value=True)
-    @patch('devices.chronos_iot.software_class.aws_iot_client.AWSIoTClient.publish_message_to_topic', return_value=True)
-    @patch('devices.chronos_iot.software_class.device_software.get_gpio', return_value={"water_valve":{"id":"water_valve","type":"switch","direction":"input","state":{"open":True}},"rain_barrel_valve":{"id":"rain_barrel_valve","type":"switch","direction":"input","state":{"open":True}}})
+    @patch('iot_core.software_class.device_software.set_gpio', return_value=True)
+    @patch('iot_core.software_class.aws_iot_client.AWSIoTClient.publish_message_to_topic', return_value=True)
+    @patch('iot_core.software_class.device_software.get_gpio', return_value={"water_valve":{"id":"water_valve","type":"switch","direction":"input","state":{"open":True}},"rain_barrel_valve":{"id":"rain_barrel_valve","type":"switch","direction":"input","state":{"open":True}}})
     def test_run_water_valve(self, mock_get, mock_publish, mock_set, mock_subscribe):
         print('\ntest_run_water_valve:')
         # run loop only once:
@@ -55,9 +55,9 @@ class TestDeviceSoftware(TestCase):
     """----aws iot client fail tests----"""
 
     # mocking AWSIoTClient is None
-    @patch('devices.chronos_iot.software_class.aws_iot_client.AWSIoTClient', return_value=None)
+    @patch('iot_core.software_class.aws_iot_client.AWSIoTClient', return_value=None)
     # # mock get gpio function and return a fake value
-    @patch('devices.chronos_iot.software_class.device_software.get_gpio', return_value={'state': {'value': 50}})
+    @patch('iot_core.software_class.device_software.get_gpio', return_value={'state': {'value': 50}})
     def test_run_soil_moisture_no_client(self, mock_get, mock_update):
         print('\ntest_run_soil_moisture_no_IoT_client:')
         # run loop only once:
@@ -69,8 +69,8 @@ class TestDeviceSoftware(TestCase):
         self.assertEqual(expected, actual)
 
     # mocking AWSIoTClient is None
-    @patch('devices.chronos_iot.software_class.aws_iot_client.AWSIoTClient', return_value=None)
-    @patch('devices.chronos_iot.software_class.device_software.get_gpio', return_value={"water_valve":{"id":"water_valve","type":"switch","direction":"input","state":{"open":True}},"rain_barrel_valve":{"id":"rain_barrel_valve","type":"switch","direction":"input","state":{"open":True}}})
+    @patch('iot_core.software_class.aws_iot_client.AWSIoTClient', return_value=None)
+    @patch('iot_core.software_class.device_software.get_gpio', return_value={"water_valve":{"id":"water_valve","type":"switch","direction":"input","state":{"open":True}},"rain_barrel_valve":{"id":"rain_barrel_valve","type":"switch","direction":"input","state":{"open":True}}})
     def test_run_water_valve_no_client(self, mock_get, mock_client):
         print('\ntest_run_water_valve_no_IoT_client:')
         # run loop only once:
