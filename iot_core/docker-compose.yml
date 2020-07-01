@@ -85,24 +85,47 @@ services:
        AWS_IOT_ENDPOINT: ${AWS_ENDPOINT}
        PYTHONUNBUFFERED: 1
 
-  valve_emulator:
+  watering_valve_emulator:
     image: csiot/emulator
     ports:
       - "127.0.0.1:5557:9292"
     volumes:
-      - "./devices/water_valve/config.yaml:/emulator/config.yaml"
+      - "./devices/watering_valve/config.yaml:/emulator/config.yaml"
 
-  valve_software:
+  watering_valve_software:
     build:
-      context: devices/water_valve
+      context: devices/watering_valve
       dockerfile: ../../Dockerfile
     depends_on:
       - valve_emulator
     volumes:
-      - "./devices/water_valve/:/usr/src/app/"
+      - "./devices/watering_valve/:/usr/src/app/"
       - "./software_class/:/usr/src/app/software_class/"
     environment:
-      HARDWARE_URL: http://valve_emulator:9292
-      DEVICE_NAME: water_valve
+      HARDWARE_URL: http://watering_valve_emulator:9292
+      DEVICE_NAME: watering_valve
       AWS_IOT_ENDPOINT: ${AWS_ENDPOINT}
       PYTHONUNBUFFERED: 1
+
+  watering_source_valve_emulator:
+    image: csiot/emulator
+    ports:
+      - "127.0.0.1:5560:9292"
+    volumes:
+      - "./devices/watering_source_valve/config.yaml:/emulator/config.yaml"
+
+  watering_source_valve_software:
+    build:
+      context: devices/watering_source_valve
+      dockerfile: ../../Dockerfile
+    depends_on:
+      - valve_emulator
+    volumes:
+      - "./devices/watering__source_valve/:/usr/src/app/"
+      - "./software_class/:/usr/src/app/software_class/"
+    environment:
+      HARDWARE_URL: http://watering_source_valve_emulator:9292
+      DEVICE_NAME: watering_source_valve
+      AWS_IOT_ENDPOINT: ${AWS_ENDPOINT}
+      PYTHONUNBUFFERED: 1
+

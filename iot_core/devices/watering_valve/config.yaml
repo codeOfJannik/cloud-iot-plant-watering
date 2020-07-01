@@ -1,0 +1,7 @@
+name: watering_valve
+gpios:
+
+  water_valve:
+    type: switch
+    state:
+      open: true
