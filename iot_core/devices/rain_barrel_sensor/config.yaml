@@ -1,4 +1,4 @@
-name: Device4
+name: rain_barrel_sensor
 gpios:
 
   rain_barrel_sensor:

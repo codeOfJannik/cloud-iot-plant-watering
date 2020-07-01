@@ -1,4 +1,4 @@
-name: Device3
+name: water_valves
 gpios:
 
   water_valve:

@@ -1,4 +1,4 @@
-name: Device2
+name: soilMoisture2_sensor
 gpios:
 
   soilMoisture2_sensor:
