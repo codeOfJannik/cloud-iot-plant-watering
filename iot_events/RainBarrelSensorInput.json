@@ -1,14 +1,9 @@
 {
-  "data": {
-        "id": "rain_barrel_sensor",
-        "type": "sensor",
-        "direction": "input",
-        "state": {
-          "value": 50,
-          "min": 0,
-          "max": 100,
-          "increment": 1,
-          "unit": "level (%)"
-        }
-      }
+    "inputName": "RainBarrelSensorInput",
+    "inputDescription": "Readings of rain barrel fill level",
+    "inputDefinition": {
+        "attributes": [
+            { "jsonPath": "data.state.value"}
+        ]
+    }
 }

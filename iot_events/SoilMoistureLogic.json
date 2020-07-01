@@ -138,8 +138,7 @@
                                 {
                                     "setTimer": {
                                         "timerName": "CheckTimer",
-                                        "seconds": 180,
-                                        "durationExpression": null
+                                        "seconds": 180
                                     }
                                 }
                             ]
@@ -254,8 +253,7 @@
                                 {
                                     "setTimer": {
                                         "timerName": "CheckTimer",
-                                        "seconds": 180,
-                                        "durationExpression": null
+                                        "seconds": 180
                                     }
                                 }
                             ]
@@ -269,9 +267,8 @@
         ],
         "initialStateName": "NormalSoil"
     },
-    "detectorModelDescription": null,
+    "detectorModelDescription": "Soil Moisture Water on, off Logic",
     "detectorModelName": "SoilMoistureLogic",
     "evaluationMethod": "BATCH",
-    "key": null,
     "roleArn": "arn:aws:iam::002917872344:role/service-role/SoilMoistureLogic-Role"
 }

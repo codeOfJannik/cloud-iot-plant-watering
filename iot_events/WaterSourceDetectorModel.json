@@ -79,6 +79,5 @@
     "detectorModelDescription": "Detector model that decides if the water pipe or rain barrel is used as water source for watering of the beds",
     "detectorModelName": "WaterSourceDetectorModel",
     "evaluationMethod": "BATCH",
-    "key": null,
     "roleArn": "arn:aws:iam::002917872344:role/service-role/WaterSourceLogic-Role"
 }
