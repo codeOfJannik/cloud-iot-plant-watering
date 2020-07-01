@@ -21,15 +21,15 @@ located at `/devices/emulator-chronos/build`
 `cd devices/chronos_iot`
 
 #### 4. Initialize Terraform
-`terraform init terraform/`
+`terraform init chronos_infrastructure/`
 
 #### 5. Optional: Check terraform script
-`terraform plan terraform/`
+`terraform plan chronos_infrastructure/`
 
 There should not be any errors or warnings
 
 #### 6. Execute terraform script
-`terraform apply terraform/`
+`terraform apply chronos_infrastructure/`
 
 Terraform creates an AWS IoT Thing, certificate and policy for each device declared by a
 directory in devices/chronos_iot/devices. After creating the AWS resources,
@@ -38,5 +38,5 @@ to emulate it. After building the Docker containers, the **run.py** script is st
 in the container of each emulated device.
 
 #### Information terraform destroy
-When `terraform destroy terraform/` is executed, the Docker containers are stopped and the AWS IoT
+When `terraform destroy chronos_infrastructure/` is executed, the Docker containers are stopped and the AWS IoT
 resources are deleted.
