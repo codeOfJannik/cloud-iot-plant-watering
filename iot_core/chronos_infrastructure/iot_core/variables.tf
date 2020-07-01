@@ -16,3 +16,8 @@ variable "private_key_ending" {
   type = string
   default = ".private.key"
 }
+
+variable "dependencies" {
+  type    = list
+  default = []
+}
