@@ -1,5 +1,5 @@
 locals {
-  files = fileset(path.cwd, "/devices/*/policy.json")
+  files = fileset(path.cwd, "/iot_core/devices/*/policy.json")
 }
 
 variable "policy" {
@@ -18,6 +18,6 @@ variable "private_key_ending" {
 }
 
 variable "dependencies" {
-  type    = list
+  type    = list(any)
   default = []
 }
