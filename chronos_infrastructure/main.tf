@@ -5,6 +5,8 @@ provider "aws" {
 
 module "iot_events" {
   source = "./iot_events"
+  aws_profile = "chronos"
+  aws_region = "us-east-1"
 }
 
 module "iot_core" {
