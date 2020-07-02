@@ -32,7 +32,7 @@ class TestDeviceSoftware(TestCase):
         sentinel = PropertyMock(side_effect=[1, 0])
         type(self.device_software).running = sentinel
 
-        actual = self.device_software.run_update_data()
+        actual = self.device_software.run_update_soil_moisture()
         expected = None  # because abort while loop and no return value is expected (only false if exception)
         self.assertEqual(expected, actual)
 
@@ -64,7 +64,7 @@ class TestDeviceSoftware(TestCase):
         sentinel = PropertyMock(side_effect=[1, 0])
         type(self.device_software).running = sentinel
 
-        actual = self.device_software.run_update_data()
+        actual = self.device_software.run_update_soil_moisture()
         expected = False
         self.assertEqual(expected, actual)
 
@@ -89,7 +89,7 @@ class TestDeviceSoftware(TestCase):
         sentinel = PropertyMock(side_effect=[1, 0])
         type(self.device_software).running = sentinel
 
-        actual = self.device_software.run_update_data()
+        actual = self.device_software.run_update_soil_moisture()
         expected = False
         self.assertEqual(expected, actual)
 

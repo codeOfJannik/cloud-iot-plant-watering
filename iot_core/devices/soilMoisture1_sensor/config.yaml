@@ -1,7 +1,7 @@
 name: soilMoisture1_sensor
 gpios:
 
-  soilMoisture1_sensor:
+  soilMoistureSensor:
     type: sensor
     state:
       # the initial value

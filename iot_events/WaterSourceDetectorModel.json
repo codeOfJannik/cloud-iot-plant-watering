@@ -22,7 +22,7 @@
                             "actions": [
                                 {
                                     "iotTopicPublish": {
-                                        "mqttTopic": "$aws/things/water_valve/shadow/update",
+                                        "mqttTopic": "$aws/things/watering_source_valve/shadow/update",
                                         "payload": {
                                             "contentExpression": "'{\\\"state\\\": {\\\"desired\\\":  {\\\"rain_barrel_valve_open\\\": false}}}'",
                                             "type": "JSON"
@@ -58,7 +58,7 @@
                             "actions": [
                                 {
                                     "iotTopicPublish": {
-                                        "mqttTopic": "$aws/things/water_valve/shadow/update",
+                                        "mqttTopic": "$aws/things/watering_source_valve/shadow/update",
                                         "payload": {
                                             "contentExpression": "'{\\\"state\\\": {\\\"desired\\\":  {\\\"rain_barrel_valve_open\\\": true}}}'",
                                             "type": "JSON"
