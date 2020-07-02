@@ -65,7 +65,7 @@ resource "aws_iot_topic_rule" "control_panel_rule" {
   name        = "sendControlPanel"
   description = "send control panel data"
   enabled     = true
-  sql         = "SELECT state.reported.data FROM '$aws/things/control_panel/shadow/update/accepted'"
+  sql         = "SELECT state.reported FROM '$aws/things/control_panel/shadow/update/accepted'"
   sql_version = "2016-03-23"
 
   iot_events {
@@ -80,7 +80,7 @@ resource "aws_iot_topic_rule" "soil_moisture_rule" {
   name        = "sendSoilMoisture"
   description = "send soil moisture"
   enabled     = true
-  sql         = "SELECT get((SELECT VALUE data FROM state.reported), 0) as data FROM '$aws/things/+/shadow/update/accepted' WHERE regexp_matches(topic(3), 'soilMoisture[0-9]{1,2}_sensor')"
+  sql         = "SELECT topic(3) as sensorId, state.reported.value FROM '$aws/things/+/shadow/update/accepted' WHERE regexp_matches(topic(3), 'soilMoisture[0-9]{1,2}_sensor')"
   sql_version = "2016-03-23"
 
   iot_events {
@@ -95,7 +95,7 @@ resource "aws_iot_topic_rule" "rain_barrel_rule" {
   name        = "sendRainBarrelReadings"
   description = "send rain barrel data"
   enabled     = true
-  sql         = "SELECT get((SELECT VALUE data FROM state.reported), 0) as data FROM '$aws/things/+/shadow/update/accepted' WHERE regexp_matches(topic(3), 'rain_barrel_sensor')"
+  sql         = "SELECT topic(3) as sensorId, state.reported.value FROM '$aws/things/+/shadow/update/accepted' WHERE regexp_matches(topic(3), 'rain_barrel_sensor')"
   sql_version = "2016-03-23"
 
   iot_events {

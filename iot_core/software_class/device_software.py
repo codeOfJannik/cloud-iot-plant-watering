@@ -108,12 +108,10 @@ class DeviceSoftware(AWSIoTClient):
             }
         }
         json_message = json.dumps(message)
-        print(message)
 
         # publish message to update device shadow with current value
         self.publish_message_to_topic(json_message, "$aws/things/{device}/shadow/update".format(device=self.DEVICE_NAME), 0)
 
-    # TODO: update method to match for watering_valve and watering_source_valve
     def run_water_valve(self):
         """
         Subscribe to IoT Service topic and change water switch state
@@ -155,7 +153,8 @@ class DeviceSoftware(AWSIoTClient):
             # update device shadow with current state
             self.update_valve_shadow(data)
             # subscribe to IoT Service and define callback function, return if callback is false, else repeat
-            if self.subscribe_to_topic("$aws/things/{device}/shadow/update/delta".format(device=self.DEVICE_NAME), custom_callback, 0):
+            delta_topic = "$aws/things/{device}/shadow/update/delta".format(device=self.DEVICE_NAME)
+            if self.subscribe_to_topic(delta_topic, custom_callback, 0):
                 pass
             else:
                 return False
@@ -178,7 +177,6 @@ class DeviceSoftware(AWSIoTClient):
             }
         }
         json_message = json.dumps(message)
-        print(message)
 
         # publish message to update device shadow with current state
         self.publish_message_to_topic(json_message, "$aws/things/{device}/shadow/update".format(device=self.DEVICE_NAME), 0)

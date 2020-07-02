@@ -3,7 +3,7 @@
     "inputDescription": "Readings of rain barrel fill level",
     "inputDefinition": {
         "attributes": [
-            { "jsonPath": "data.state.value"}
+            { "jsonPath": "value"}
         ]
     }
 }

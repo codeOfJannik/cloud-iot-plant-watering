@@ -8,7 +8,7 @@
                     "transitionEvents": [
                         {
                             "eventName": "RainBarrelFilled",
-                            "condition": "$input.RainBarrelSensorInput.data.state.value > 10",
+                            "condition": "$input.RainBarrelSensorInput.value > 10",
                             "actions": [],
                             "nextState": "UseRainBarrel"
                         }
@@ -24,7 +24,7 @@
                                     "iotTopicPublish": {
                                         "mqttTopic": "$aws/things/watering_source_valve/shadow/update",
                                         "payload": {
-                                            "contentExpression": "'{\\\"state\\\": {\\\"desired\\\":  {\\\"rain_barrel_valve_open\\\": false}}}'",
+                                            "contentExpression": "'{\\\"state\\\": {\\\"desired\\\":  {\\\"valve_open\\\": false}}}'",
                                             "type": "JSON"
                                         }
                                     }
@@ -44,7 +44,7 @@
                     "transitionEvents": [
                         {
                             "eventName": "RainBarrelEmpty",
-                            "condition": "$input.RainBarrelSensorInput.data.state.value < 10",
+                            "condition": "$input.RainBarrelSensorInput.value < 10",
                             "actions": [],
                             "nextState": "UseWaterPipe"
                         }
@@ -60,7 +60,7 @@
                                     "iotTopicPublish": {
                                         "mqttTopic": "$aws/things/watering_source_valve/shadow/update",
                                         "payload": {
-                                            "contentExpression": "'{\\\"state\\\": {\\\"desired\\\":  {\\\"rain_barrel_valve_open\\\": true}}}'",
+                                            "contentExpression": "'{\\\"state\\\": {\\\"desired\\\":  {\\\"valve_open\\\": true}}}'",
                                             "type": "JSON"
                                         }
                                     }

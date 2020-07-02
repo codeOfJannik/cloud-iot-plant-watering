@@ -12,7 +12,7 @@
                                 {
                                     "setVariable": {
                                         "variableName": "average",
-                                        "value": "( $input.SoilMoistureInput.data.state.value + $variable.average ) / 2"
+                                        "value": "( $input.SoilMoistureInput.value + $variable.average ) / 2"
                                     }
                                 }
                             ]
@@ -24,13 +24,13 @@
                                 {
                                     "setVariable": {
                                         "variableName": "Bed1Threshold",
-                                        "value": "$input.ControlPanelInput.data.bed_1_soilMoisture_threshold.state.value"
+                                        "value": "$input.ControlPanelInput.reported.bed_1_soilMoisture_threshold"
                                     }
                                 },
                                 {
                                     "setVariable": {
                                         "variableName": "Bed2Threshold",
-                                        "value": "$input.ControlPanelInput.data.bed_2_soilMoisture_threshold.state.value"
+                                        "value": "$input.ControlPanelInput.reported.bed_2_soilMoisture_threshold"
                                     }
                                 }
                             ]
@@ -75,7 +75,7 @@
                                 {
                                     "setVariable": {
                                         "variableName": "average",
-                                        "value": "($input.SoilMoistureInput.data.state.value + $variable.average ) / 2"
+                                        "value": "($input.SoilMoistureInput.value + $variable.average ) / 2"
                                     }
                                 }
                             ]
@@ -87,13 +87,13 @@
                                 {
                                     "setVariable": {
                                         "variableName": "Bed1Threshold",
-                                        "value": "$input.ControlPanelInput.data.bed_1_soilMoisture_threshold.state.value"
+                                        "value": "$input.ControlPanelInput.reported.bed_1_soilMoisture_threshold"
                                     }
                                 },
                                 {
                                     "setVariable": {
                                         "variableName": "Bed2Threshold",
-                                        "value": "$input.ControlPanelInput.data.bed_2_soilMoisture_threshold.state.value"
+                                        "value": "$input.ControlPanelInput.reported.bed_2_soilMoisture_threshold"
                                     }
                                 }
                             ]
@@ -116,9 +116,9 @@
                             "actions": [
                                 {
                                     "iotTopicPublish": {
-                                        "mqttTopic": "$aws/things/water_valve/shadow/update",
+                                        "mqttTopic": "$aws/things/watering_valve/shadow/update",
                                         "payload": {
-                                            "contentExpression": "'{\\\"state\\\": {\\\"desired\\\":  {\\\"water_valve_open\\\": true}}}'",
+                                            "contentExpression": "'{\\\"state\\\": {\\\"desired\\\":  {\\\"valve_open\\\": true}}}'",
                                             "type": "JSON"
                                         }
                                     }
@@ -160,7 +160,7 @@
                                 {
                                     "setVariable": {
                                         "variableName": "average",
-                                        "value": "( $input.SoilMoistureInput.data.state.value + $variable.average ) / 2"
+                                        "value": "( $input.SoilMoistureInput.value + $variable.average ) / 2"
                                     }
                                 }
                             ]
@@ -172,13 +172,13 @@
                                 {
                                     "setVariable": {
                                         "variableName": "Bed1Threshold",
-                                        "value": "$input.ControlPanelInput.data.bed_1_soilMoisture_threshold.state.value"
+                                        "value": "$input.ControlPanelInput.reported.bed_1_soilMoisture_threshold"
                                     }
                                 },
                                 {
                                     "setVariable": {
                                         "variableName": "Bed2Threshold",
-                                        "value": "$input.ControlPanelInput.data.bed_2_soilMoisture_threshold.state.value"
+                                        "value": "$input.ControlPanelInput.reported.bed_2_soilMoisture_threshold"
                                     }
                                 }
                             ]
@@ -201,9 +201,9 @@
                             "actions": [
                                 {
                                     "iotTopicPublish": {
-                                        "mqttTopic": "$aws/things/water_valve/shadow/update",
+                                        "mqttTopic": "$aws/things/watering_valve/shadow/update",
                                         "payload": {
-                                            "contentExpression": "'{\\\"state\\\": {\\\"desired\\\":  {\\\"water_valve_open\\\": false}}}'",
+                                            "contentExpression": "'{\\\"state\\\": {\\\"desired\\\":  {\\\"valve_open\\\": false}}}'",
                                             "type": "JSON"
                                         }
                                     }

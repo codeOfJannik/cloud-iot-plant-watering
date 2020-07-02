@@ -3,7 +3,7 @@
     "inputDescription": "Sensor readings of soil moisture sensors",
     "inputDefinition": {
         "attributes": [
-            { "jsonPath": "data.state.value"}
+            { "jsonPath": "value"}
         ]
     }
 }
