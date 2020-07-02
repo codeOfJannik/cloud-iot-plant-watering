@@ -18,6 +18,6 @@ variable "private_key_ending" {
 }
 
 variable "dependencies" {
-  type    = list
+  type    = list(any)
   default = []
 }
