@@ -41,7 +41,7 @@ class TestDeviceSoftware(TestCase):
     # mock set gpio function and return True
     @patch('iot_core.software_class.device_software.set_gpio', return_value=True)
     @patch('iot_core.software_class.aws_iot_client.AWSIoTClient.publish_message_to_topic', return_value=True)
-    @patch('iot_core.software_class.device_software.get_gpio', return_value={"water_valve":{"id":"water_valve","type":"switch","direction":"input","state":{"open":True}},"rain_barrel_valve":{"id":"rain_barrel_valve","type":"switch","direction":"input","state":{"open":True}}})
+    @patch('iot_core.software_class.device_software.get_gpio', return_value={"id":"water_valve","type":"switch","direction":"input","state":{"open":True}})
     def test_run_water_valve(self, mock_get, mock_publish, mock_set, mock_subscribe):
         print('\ntest_run_water_valve:')
         # run loop only once:
