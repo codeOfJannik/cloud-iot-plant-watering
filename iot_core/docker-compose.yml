@@ -12,6 +12,7 @@ services:
     build:
       context: devices/control_panel
       dockerfile: ../../Dockerfile
+    restart: always
     volumes:
       - "./devices/control_panel/:/usr/src/app/"
       - "./software_class/:/usr/src/app/software_class/"
@@ -33,6 +34,7 @@ services:
     build:
       context: devices/soilMoisture1_sensor
       dockerfile: ../../Dockerfile
+    restart: always
     volumes:
       - "./devices/soilMoisture1_sensor/:/usr/src/app/"
       - "./software_class/:/usr/src/app/software_class/"
@@ -54,6 +56,7 @@ services:
     build:
       context: devices/soilMoisture2_sensor
       dockerfile: ../../Dockerfile
+    restart: always
     volumes:
       - "./devices/soilMoisture2_sensor/:/usr/src/app/"
       - "./software_class/:/usr/src/app/software_class/"
@@ -75,6 +78,7 @@ services:
     build:
       context: devices/rain_barrel_sensor
       dockerfile: ../../Dockerfile
+    restart: always
     volumes:
        - "./devices/rain_barrel_sensor/:/usr/src/app/"
        - "./software_class/:/usr/src/app/software_class/"
@@ -96,8 +100,7 @@ services:
     build:
       context: devices/watering_valve
       dockerfile: ../../Dockerfile
-    depends_on:
-      - watering_valve_emulator
+    restart: always
     volumes:
       - "./devices/watering_valve/:/usr/src/app/"
       - "./software_class/:/usr/src/app/software_class/"
@@ -118,8 +121,7 @@ services:
     build:
       context: devices/watering_source_valve
       dockerfile: ../../Dockerfile
-    depends_on:
-      - watering_source_valve_emulator
+    restart: always
     volumes:
       - "./devices/watering__source_valve/:/usr/src/app/"
       - "./software_class/:/usr/src/app/software_class/"
