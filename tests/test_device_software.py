@@ -15,7 +15,8 @@ class TestDeviceSoftware(TestCase):
     @patch.dict('os.environ', {'HARDWARE_URL': "http://soilmoisture1_emulator:9292",
                                'DEVICE_NAME': "soilMoisture1_sensor"})
     @patch('iot_core.software_class.device_software.super')
-    def setUpClass(cls, mock_super):
+    @patch('iot_core.software_class.device_software.DeviceSoftware.cert_files_exist', return_value=True)
+    def setUpClass(cls, files_exist, mock_super):
         print('Create DeviceSoftware class')
         # call class and skip super init
         cls.device_software = DeviceSoftware()
@@ -41,7 +42,8 @@ class TestDeviceSoftware(TestCase):
     # mock set gpio function and return True
     @patch('iot_core.software_class.device_software.set_gpio', return_value=True)
     @patch('iot_core.software_class.aws_iot_client.AWSIoTClient.publish_message_to_topic', return_value=True)
-    @patch('iot_core.software_class.device_software.get_gpio', return_value={"id":"water_valve","type":"switch","direction":"input","state":{"open":True}})
+    @patch('iot_core.software_class.device_software.get_gpio',
+           return_value={"id": "water_valve", "type": "switch", "direction": "input", "state": {"open": True}})
     def test_run_water_valve(self, mock_get, mock_publish, mock_set, mock_subscribe):
         print('\ntest_run_water_valve:')
         # run loop only once:
@@ -70,7 +72,10 @@ class TestDeviceSoftware(TestCase):
 
     # mocking AWSIoTClient is None
     @patch('iot_core.software_class.aws_iot_client.AWSIoTClient', return_value=None)
-    @patch('iot_core.software_class.device_software.get_gpio', return_value={"water_valve":{"id":"water_valve","type":"switch","direction":"input","state":{"open":True}},"rain_barrel_valve":{"id":"rain_barrel_valve","type":"switch","direction":"input","state":{"open":True}}})
+    @patch('iot_core.software_class.device_software.get_gpio', return_value={
+        "water_valve": {"id": "water_valve", "type": "switch", "direction": "input", "state": {"open": True}},
+        "rain_barrel_valve": {"id": "rain_barrel_valve", "type": "switch", "direction": "input",
+                              "state": {"open": True}}})
     def test_run_water_valve_no_client(self, mock_get, mock_client):
         print('\ntest_run_water_valve_no_IoT_client:')
         # run loop only once:

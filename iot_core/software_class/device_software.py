@@ -22,10 +22,13 @@ class DeviceSoftware(AWSIoTClient):
         self.root_ca = os.path.abspath(cert_directory + "root-CA.crt")
         self.certificate = os.path.abspath(self.DEVICE_NAME + ".cert.pem")
         self.private_key = os.path.abspath(self.DEVICE_NAME + ".private.key")
-        if os.path.exists(self.root_ca) and os.path.exists(self.certificate) and os.path.exists(self.private_key):
+        if self.cert_files_exist():
             super().__init__(self.root_ca, self.certificate, self.private_key, self.DEVICE_NAME)
         else:
             sys.exit('CA Files not exists')
+
+    def cert_files_exist(self):
+        return os.path.exists(self.root_ca) and os.path.exists(self.certificate) and os.path.exists(self.private_key)
 
     def run_update_control_panel(self):
         """
@@ -131,7 +134,9 @@ class DeviceSoftware(AWSIoTClient):
             """
             try:
                 # received message:
+                print('custom callback')
                 received_data = json.loads(message.payload)
+                print(f'received shadow delta: {received_data}')
                 desired_switch_state = received_data['state']['valve_open']
                 data_message = json.dumps({"open": not desired_switch_state})
                 set_gpio(url=url, data=data_message)
@@ -141,6 +146,7 @@ class DeviceSoftware(AWSIoTClient):
                 data = {"valve_open": sensor_value}
                 # update device shadow with current state
                 self.update_valve_shadow(data)
+                print('set gpio success')
 
             except ConnectionRefusedError:
                 print('could not connect to {url}'.format(url=self.HARDWARE_URL))
@@ -148,16 +154,19 @@ class DeviceSoftware(AWSIoTClient):
             except Exception as e:
                 # print(f'unknown error')
                 print("change switch state error: {}".format(e))
-                return False
+                self.running = False
 
         try:
             # get current state from gpio
             sensor_value = not get_gpio(url=url)["state"]["open"]
             data = {"valve_open": sensor_value}
             # update device shadow with current state
+            print(f'update shadow value with data: {data}')
             self.update_valve_shadow(data)
             # subscribe to IoT Service and define callback function, return if callback is false, else repeat
             delta_topic = "$aws/things/{device}/shadow/update/delta".format(device=self.DEVICE_NAME)
+            print('subscribe...')
+
             if self.subscribe_to_topic(delta_topic, custom_callback, 0):
                 pass
             else:
@@ -168,6 +177,7 @@ class DeviceSoftware(AWSIoTClient):
         except Exception as e:
             # print(f'unknown error')
             print("change switch state error: {}".format(e))
+            self.running = False
             return False
 
         while self.running:
@@ -183,10 +193,11 @@ class DeviceSoftware(AWSIoTClient):
         json_message = json.dumps(message)
 
         # publish message to update device shadow with current state
+        print('publish message...')
         self.publish_message_to_topic(json_message, "$aws/things/{device}/shadow/update".format(device=self.DEVICE_NAME), 0)
 
 
-"""----helper functions----"""
+"""----gpio functions----"""
 
 
 def set_gpio(url: str, data: str) -> bool:
