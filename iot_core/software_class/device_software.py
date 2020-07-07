@@ -3,6 +3,7 @@ import os
 import urllib.request
 import json
 from .aws_iot_client import AWSIoTClient
+import sys
 
 
 class DeviceSoftware(AWSIoTClient):
@@ -21,7 +22,10 @@ class DeviceSoftware(AWSIoTClient):
         self.root_ca = os.path.abspath(cert_directory + "root-CA.crt")
         self.certificate = os.path.abspath(self.DEVICE_NAME + ".cert.pem")
         self.private_key = os.path.abspath(self.DEVICE_NAME + ".private.key")
-        super().__init__(self.root_ca, self.certificate, self.private_key, self.DEVICE_NAME)
+        if os.path.exists(self.root_ca) and os.path.exists(self.certificate) and os.path.exists(self.private_key):
+            super().__init__(self.root_ca, self.certificate, self.private_key, self.DEVICE_NAME)
+        else:
+            sys.exit('CA Files not exists')
 
     def run_update_control_panel(self):
         """
