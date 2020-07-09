@@ -30,3 +30,15 @@ endpoint address was stored during terraform setup in a _.env_ file, so it is as
 The `subscribe_to_topic()` and `publish_message_to_topic()` functions map the equivalent functions of the AWS IoT SDK to
 our class.
 
+## device_software.py
+The ___DeviceSoftware___ class is subclass of the ___AWSIoTClient___ and is instanced for each device in it's _run.py_
+file. The corresponding run function is also called in the _run.py_
+
+### init
+At initialization environment variables that have been set in the docker-compose.yml are assigned to class variables,
+the existence of the required certificates and private key files is checked and if they are present, the `super().__init__`
+function is called to get a MQTT connection to the AWS IoT platform. If a certificate or the private key is missing the
+code exits with a failure message.
+
+### run functions
+#### update_control_panel
