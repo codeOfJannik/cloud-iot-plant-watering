@@ -8,7 +8,7 @@ Its attributes are the thresholds for the appropriate beds
 ## RainBarrelSensorInput
 Contains the value of the rain barrel sensor. Value is the actual fill level.
 
-##SoilMoistureInput
+## SoilMoistureInput
 Contains the value of the soil moisture sensor.
 
 ## SoilMoistureLogic
