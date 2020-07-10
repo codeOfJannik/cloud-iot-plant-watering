@@ -16,6 +16,7 @@ in background sending emulated data to AWS based on following project:
 https://gitlab.mi.hdm-stuttgart.de/csiot-tools/emulator
 
 ## Further readme files for other important project aspects
+IoT Core: https://gitlab.mi.hdm-stuttgart.de/csiot/ss20/chronos/-/blob/master/iot_core/README.md
 
 ## Setup instructions
 
