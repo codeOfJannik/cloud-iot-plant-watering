@@ -5,7 +5,7 @@ This is the repository based on the project for the course 113455a "Cloud Servic
 Target was to connect IoT devices using scalable cloud services in a project setup.
 
 ## Features/functions of this project
-This is a automatic watering model based on the decision of soil moisture sensors.
+This is an automatic watering model based on the decision of soil moisture sensors.
 Therefore there are actually 2 soil moisture sensors sending data and 2 valves.
 One valve is for watering itself and the other one is for the watering source.
 Based on the fuel level of a rain barrel it decides to take water either of the barrel or a 
