@@ -40,7 +40,6 @@ class DeviceSoftware(AWSIoTClient):
         while self.running:
             time.sleep(self.INTERVAL_TIME)
             try:
-                # get and parse switch state
                 url = '{url}/gpios'.format(url=self.HARDWARE_URL)
                 # get current state from gpio
                 data = get_gpio(url=url)
@@ -49,7 +48,7 @@ class DeviceSoftware(AWSIoTClient):
                 for key in keys:
                     shadow_data[key] = data[key]["state"]["value"]
 
-                self.update_sensor_shadow(shadow_data)
+                self.update_device_shadow(shadow_data)
 
             except ConnectionRefusedError:
                 print('could not connect to {url}'.format(url=self.HARDWARE_URL))
@@ -68,13 +67,12 @@ class DeviceSoftware(AWSIoTClient):
         while self.running:
             time.sleep(self.INTERVAL_TIME)
             try:
-                # get and parse switch state
                 url = '{url}/gpios/rain_barrel_sensor'.format(url=self.HARDWARE_URL)
                 # get current state from gpio
                 sensor_value = get_gpio(url=url)["state"]["value"]
                 data = {"value": sensor_value}
 
-                self.update_sensor_shadow(data)
+                self.update_device_shadow(data)
 
             except ConnectionRefusedError:
                 print('could not connect to {url}'.format(url=self.HARDWARE_URL))
@@ -93,13 +91,12 @@ class DeviceSoftware(AWSIoTClient):
         while self.running:
             time.sleep(self.INTERVAL_TIME)
             try:
-                # get and parse switch state
                 url = '{url}/gpios/soilMoistureSensor'.format(url=self.HARDWARE_URL)
                 # get current state from gpio
                 sensor_value = get_gpio(url=url)["state"]["value"]
                 data = {"value": sensor_value}
 
-                self.update_sensor_shadow(data)
+                self.update_device_shadow(data)
 
             except ConnectionRefusedError:
                 print('could not connect to {url}'.format(url=self.HARDWARE_URL))
@@ -107,17 +104,6 @@ class DeviceSoftware(AWSIoTClient):
             except Exception as e:
                 print(e)
                 return False
-
-    def update_sensor_shadow(self, data):
-        message = {
-            "state": {
-                "reported": data
-            }
-        }
-        json_message = json.dumps(message)
-
-        # publish message to update device shadow with current value
-        self.publish_message_to_topic(json_message, "$aws/things/{device}/shadow/update".format(device=self.DEVICE_NAME), 0)
 
     def run_water_valve(self):
         """
@@ -137,15 +123,15 @@ class DeviceSoftware(AWSIoTClient):
                 print('custom callback')
                 received_data = json.loads(message.payload)
                 print(f'received shadow delta: {received_data}')
-                desired_switch_state = received_data['state']['valve_open']
-                data_message = json.dumps({"open": not desired_switch_state})
+                desired_valve_state = received_data['state']['valve_open']
+                data_message = json.dumps({"open": not desired_valve_state})
                 set_gpio(url=url, data=data_message)
 
                 # update shadow after changed to new switch state
                 sensor_value = not get_gpio(url=url)["state"]["open"]
                 data = {"valve_open": sensor_value}
                 # update device shadow with current state
-                self.update_valve_shadow(data)
+                self.update_device_shadow(data)
                 print('set gpio success')
 
             except ConnectionRefusedError:
@@ -162,7 +148,7 @@ class DeviceSoftware(AWSIoTClient):
             data = {"valve_open": sensor_value}
             # update device shadow with current state
             print(f'update shadow value with data: {data}')
-            self.update_valve_shadow(data)
+            self.update_device_shadow(data)
             # subscribe to IoT Service and define callback function, return if callback is false, else repeat
             delta_topic = "$aws/things/{device}/shadow/update/delta".format(device=self.DEVICE_NAME)
             print('subscribe...')
@@ -183,8 +169,7 @@ class DeviceSoftware(AWSIoTClient):
         while self.running:
             pass
 
-    def update_valve_shadow(self, data):
-        # get valve state
+    def update_device_shadow(self, data):
         message = {
             "state": {
                 "reported": data
@@ -192,8 +177,7 @@ class DeviceSoftware(AWSIoTClient):
         }
         json_message = json.dumps(message)
 
-        # publish message to update device shadow with current state
-        print('publish message...')
+        # publish message to update device shadow with current value
         self.publish_message_to_topic(json_message, "$aws/things/{device}/shadow/update".format(device=self.DEVICE_NAME), 0)
 
 
