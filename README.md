@@ -18,6 +18,7 @@ https://gitlab.mi.hdm-stuttgart.de/csiot-tools/emulator
 ## Further readme files for other important project aspects
 IoT Core: https://gitlab.mi.hdm-stuttgart.de/csiot/ss20/chronos/-/blob/master/iot_core/README.md
 IoT Events: https://gitlab.mi.hdm-stuttgart.de/csiot/ss20/chronos/-/blob/master/iot_events/README.md
+Software Class: https://gitlab.mi.hdm-stuttgart.de/csiot/ss20/chronos/-/blob/master/iot_core/software_class/README.md
 
 ## Setup instructions
 
