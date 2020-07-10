@@ -1,5 +1,22 @@
 # chronos
 
+##Function
+This is the repository based on the project for the course 113455a "Cloud Services and Internet of Things".
+Target was to connect IoT devices using scalable cloud services in a project setup.
+
+##Features/functions of this project
+This is a automatic watering model based on the decision of soil moisture sensors.
+Therefore there are actually 2 soil moisture sensors sending data and 2 valves.
+One valve is for watering itself and the other one is for the watering source.
+Based on the fuel level of a rain barrel it decides to take water either of the barrel or a 
+normal water pipe.
+As cloud provider AWS was chosen and that's why most of the files are in JSON, programming
+was mainly in Python. Due to COVID-19 there were no real sensors, so there is an emulator 
+in background sending emulated data to AWS based on following project: 
+https://gitlab.mi.hdm-stuttgart.de/csiot-tools/emulator
+
+##Further readme files for other important project aspects
+
 ## Setup instructions
 
 ### Requirements
@@ -39,3 +56,8 @@ in the container of each emulated device.
 #### Information terraform destroy
 When `terraform destroy chronos_infrastructure/` is executed, the Docker containers are stopped and the AWS IoT
 resources are deleted.
+
+##Contributors
+Jannik Schlemmer (js329@hdm-stuttgart.de)
+Patrick Eichhorn (pe019@hdm-stuttgart.de)
+Jan Ziemann (jz043@hdm-stuttgart.de)
