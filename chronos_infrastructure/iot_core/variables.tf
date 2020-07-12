@@ -1,7 +1,8 @@
+// get path to every device policy
 locals {
   files = fileset(path.cwd, "/iot_core/devices/*/policy.json")
 }
-
+// template variable
 variable "policy" {
   type = string
   default = "_policy"
