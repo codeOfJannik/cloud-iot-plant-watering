@@ -3,12 +3,12 @@ The _chronos_infrastructure_ directory contains terraform scripts, which declare
 are set up. This scripts are be split up in three modules:
 - [IoT Events](iot_events/README.md)
 - [IoT Core](iot_core/README.md)
-- [Docker Devices + Software](docker/README.md)
+- [Docker](docker/README.md)
 
 To get more information, see the corresponding module README's
 
-The _main.tf_ in the _chronos_infrastructure_ directory contains the AWS profile and region name and run the three
-different modules.
+The [_main.tf_](./main.tf) in the _chronos_infrastructure_ directory contains the AWS profile and region name and run 
+the three different modules.
 The profile needs to be declared in the _.aws/credentials_ file with the following specifications:
 
 ```
@@ -17,7 +17,8 @@ aws_access_key_id = your access key         # required
 aws_secret_access_key = your secret key     # required
 region = us-east-1                          # optional
 ```
-The profile name need to be the same as the declared profile name in the _main.tf_ file.
+
+The profile name need to be the same as the declared profile name in the [_main.tf_](./main.tf) file.
 A region is required either in the AWS credential file or in the _main.tf_ file. If in both files a region is specified,
 this will be used, which is in the _main.tf_ file.
 
@@ -28,5 +29,4 @@ different modules.
 
 The dependencies list is passed in the root _main.tf_ file to the corresponding modules, which can read in the list with 
 a variable template _dependencies_, also a list.
-
 This dependencies are important to tell terraform to wait for other resources.

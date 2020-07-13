@@ -46,19 +46,22 @@ located at `/emulator-chronos/build`
 
 There should not be any errors or warnings
 
-#### 5. Execute terraform script
+#### 5. Execute terraform script (see [README](chronos_infrastructure/README.md))
 `terraform apply chronos_infrastructure/`
 
-Terraform creates the AWS IoT Events Inputs and Detector Models.
+Terraform creates the AWS IoT Events Inputs and Detector Models (see 
+[iot_events module](chronos_infrastructure/iot_events/README.md)).
 After that, Terraform creates an AWS IoT Thing, certificate and policy for each device declared by a
-directory in devices/chronos_iot/devices, as well as rules to send data to iot events. After creating the AWS resources,
-Terraform executes the docker-compose up command that sets up Docker container for each device
-to emulate it. After building the Docker containers, the **run.py** script is started
-in the container of each emulated device.
+directory in devices/chronos_iot/devices, as well as rules to send data to iot events (see 
+[iot_core module](chronos_infrastructure/iot_core/README.md)). 
+After creating the AWS resources, Terraform executes the docker-compose up command that sets up Docker container for 
+each device to emulate it (see [docker module](chronos_infrastructure/docker/README.md)). 
+After building the Docker containers, the **run.py** script is started in the container of each emulated device (see
+[docker-compose.yml](iot_core/docker-compose.yml) and [README](iot_core/README.md)).
 
 #### Information terraform destroy
 When `terraform destroy chronos_infrastructure/` is executed, the Docker containers are stopped and the AWS IoT
-resources are deleted.
+resources are deleted in reversed order.
 
 ##Contributors
 Jannik Schlemmer (js329@hdm-stuttgart.de)

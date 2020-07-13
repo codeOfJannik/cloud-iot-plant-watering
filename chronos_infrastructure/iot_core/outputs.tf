@@ -1,3 +1,6 @@
+// need in docker module:
+// wait until the iot_core module is ready, used to minimize docker container restarts due to missing connection to AWS
+// IoT Things.
 output "docker_dependencies" {
   value = [
     aws_iot_thing.thing,

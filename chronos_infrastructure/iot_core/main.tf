@@ -27,25 +27,25 @@ resource "aws_iot_policy" "thing_policy" {
   )
 }
 
+// attache each certificate and policy to the corresponding thing (for each device)
 resource "aws_iot_thing_principal_attachment" "att" {
   for_each = local.files
   principal = aws_iot_certificate.thing_cert[each.key].arn
   thing     = aws_iot_thing.thing[each.key].name
 }
-
 resource "aws_iot_policy_attachment" "att" {
   for_each =  local.files
   policy = aws_iot_policy.thing_policy[each.key].name
   target = aws_iot_certificate.thing_cert[each.key].arn
 }
 
+// create certificate and private key files for each device
 resource "local_file" "thing_cert_pem" {
   for_each = local.files
   sensitive_content = aws_iot_certificate.thing_cert[each.key].certificate_pem
   file_permission = "0664"
   filename = "${dirname(each.value)}/${basename(dirname(each.value))}${var.cert_file_ending}"
 }
-
 resource "local_file" "thing_key_pem" {
   for_each = local.files
   sensitive_content = aws_iot_certificate.thing_cert[each.key].private_key
@@ -53,12 +53,13 @@ resource "local_file" "thing_key_pem" {
   filename = "${dirname(each.value)}/${basename(dirname(each.value))}${var.private_key_ending}"
 }
 
+// write endpoint to .env file, to have access in software class (for sdk connection)
 resource "local_file" "aws_endpoint" {
   filename = ".env"
   content = "AWS_ENDPOINT=${data.aws_iot_endpoint.endpointUrl.endpoint_address}"
 }
 
-
+// create rules to pass information to AWS IoT Events (next three resources)
 resource "aws_iot_topic_rule" "control_panel_rule" {
   depends_on = [var.dependencies]
 
@@ -73,7 +74,6 @@ resource "aws_iot_topic_rule" "control_panel_rule" {
     role_arn   = aws_iam_role.core_rule_role.arn
   }
 }
-
 resource "aws_iot_topic_rule" "soil_moisture_rule" {
   depends_on = [var.dependencies]
 
@@ -88,7 +88,6 @@ resource "aws_iot_topic_rule" "soil_moisture_rule" {
     role_arn   = aws_iam_role.core_rule_role.arn
   }
 }
-
 resource "aws_iot_topic_rule" "rain_barrel_rule" {
   depends_on = [var.dependencies]
 
@@ -104,6 +103,8 @@ resource "aws_iot_topic_rule" "rain_barrel_rule" {
   }
 }
 
+// set permissions in policy, allow rules sending data to IoT Events Inputs
+// in addition for development: allow sending data to a "test" mqtt topic
 resource "aws_iam_policy" "core_rule_policy" {
   depends_on = [var.dependencies]
 
@@ -132,11 +133,13 @@ resource "aws_iam_policy" "core_rule_policy" {
   EOF
 }
 
+// attache policy to role
 resource "aws_iam_role_policy_attachment" "attach_role_policy" {
   policy_arn = aws_iam_policy.core_rule_policy.arn
   role = aws_iam_role.core_rule_role.name
 }
 
+// role, containing the permissions of the event rules
 resource "aws_iam_role" "core_rule_role" {
   name = "core_rule_role"
   path = "/service-role/"
