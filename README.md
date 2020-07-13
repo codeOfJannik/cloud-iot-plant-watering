@@ -63,6 +63,9 @@ After building the Docker containers, the **run.py** script is started in the co
 When `terraform destroy chronos_infrastructure/` is executed, the Docker containers are stopped and the AWS IoT
 resources are deleted in reversed order.
 
+# EDIT: Explain CI Runner, and run tests? 
+(for more information see [tests README](tests/README.md))
+
 ##Contributors
 Jannik Schlemmer (js329@hdm-stuttgart.de)
 Patrick Eichhorn (pe019@hdm-stuttgart.de)
