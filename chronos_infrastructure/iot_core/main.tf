@@ -2,6 +2,9 @@ data "aws_iot_endpoint" "endpointUrl" {
   endpoint_type = "iot:Data-ATS"
 }
 
+// used to get current account ID
+data "aws_caller_identity" "current" {}
+
 resource "aws_iot_thing" "thing" {
   for_each = local.files
   name = basename(dirname(each.value))
@@ -118,15 +121,15 @@ resource "aws_iam_policy" "core_rule_policy" {
         "Effect": "Allow",
         "Action": "iotevents:BatchPutMessage",
         "Resource": [
-            "arn:aws:iotevents:us-east-1:002917872344:input/SoilMoistureInput",
-            "arn:aws:iotevents:us-east-1:002917872344:input/ControlPanelInput",
-            "arn:aws:iotevents:us-east-1:002917872344:input/RainBarrelSensorInput"
+            "arn:aws:iotevents:*:${data.aws_caller_identity.current.account_id}:input/SoilMoistureInput",
+            "arn:aws:iotevents:*:${data.aws_caller_identity.current.account_id}:input/ControlPanelInput",
+            "arn:aws:iotevents:*:${data.aws_caller_identity.current.account_id}:input/RainBarrelSensorInput"
         ]
       },
       {
         "Effect": "Allow",
         "Action": "iot:Publish",
-        "Resource": "arn:aws:iot:us-east-1:002917872344:topic/events/rules/test"
+        "Resource": "arn:aws:iot:*:${data.aws_caller_identity.current.account_id}:topic/events/rules/test"
       }
     ]
   }
