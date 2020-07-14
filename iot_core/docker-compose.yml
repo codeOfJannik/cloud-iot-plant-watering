@@ -4,7 +4,7 @@ services:
   control_panel_emulator:
     image: csiot/emulator
     ports:
-      - "127.0.0.1:5558:9292"
+      - "127.0.0.1:5555:9292"
     volumes:
       - "./devices/control_panel/config.yaml:/emulator/config.yaml"
 
@@ -25,10 +25,80 @@ services:
       AWS_IOT_ENDPOINT: ${AWS_ENDPOINT}
       PYTHONUNBUFFERED: 1
 
+  watering_valve_emulator:
+    image: csiot/emulator
+    ports:
+      - "127.0.0.1:5556:9292"
+    volumes:
+      - "./devices/watering_valve/config.yaml:/emulator/config.yaml"
+
+  watering_valve_software:
+    build:
+      context: devices/watering_valve
+      dockerfile: ../../Dockerfile
+    restart: always
+    depends_on:
+      - watering_valve_emulator
+    volumes:
+      - "./devices/watering_valve/:/usr/src/app/"
+      - "./software_class/:/usr/src/app/software_class/"
+    environment:
+      HARDWARE_URL: http://watering_valve_emulator:9292
+      DEVICE_NAME: watering_valve
+      AWS_IOT_ENDPOINT: ${AWS_ENDPOINT}
+      PYTHONUNBUFFERED: 1
+
+  watering_source_valve_emulator:
+    image: csiot/emulator
+    ports:
+      - "127.0.0.1:5557:9292"
+    volumes:
+      - "./devices/watering_source_valve/config.yaml:/emulator/config.yaml"
+
+  watering_source_valve_software:
+    build:
+      context: devices/watering_source_valve
+      dockerfile: ../../Dockerfile
+    restart: always
+    depends_on:
+      - watering_source_valve_emulator
+    volumes:
+      - "./devices/watering_source_valve/:/usr/src/app/"
+      - "./software_class/:/usr/src/app/software_class/"
+    environment:
+      HARDWARE_URL: http://watering_source_valve_emulator:9292
+      DEVICE_NAME: watering_source_valve
+      AWS_IOT_ENDPOINT: ${AWS_ENDPOINT}
+      PYTHONUNBUFFERED: 1
+
+  rain_barrel_sensor_emulator:
+    image: csiot/emulator
+    ports:
+      - "127.0.0.1:5558:9292"
+    volumes:
+      - "./devices/rain_barrel_sensor/config.yaml:/emulator/config.yaml"
+
+  rain_barrel_sensor_software:
+    build:
+      context: devices/rain_barrel_sensor
+      dockerfile: ../../Dockerfile
+    restart: always
+    depends_on:
+      - rain_barrel_sensor_emulator
+    volumes:
+      - "./devices/rain_barrel_sensor/:/usr/src/app/"
+      - "./software_class/:/usr/src/app/software_class/"
+    environment:
+      HARDWARE_URL: http://rain_barrel_sensor_emulator:9292
+      DEVICE_NAME: rain_barrel_sensor
+      INTERVAL_TIME: 30
+      AWS_IOT_ENDPOINT: ${AWS_ENDPOINT}
+      PYTHONUNBUFFERED: 1
+
   soilmoisture1_emulator:
     image: csiot/emulator
     ports:
-      - "127.0.0.1:5555:9292"
+      - "127.0.0.1:5560:9292"
     volumes:
       - "./devices/soilMoisture1_sensor/config.yaml:/emulator/config.yaml"
 
@@ -52,7 +122,7 @@ services:
   soilmoisture2_emulator:
     image: csiot/emulator
     ports:
-      - "127.0.0.1:5556:9292"
+      - "127.0.0.1:5561:9292"
     volumes:
       - "./devices/soilMoisture2_sensor/config.yaml:/emulator/config.yaml"
 
@@ -73,73 +143,26 @@ services:
       AWS_IOT_ENDPOINT: ${AWS_ENDPOINT}
       PYTHONUNBUFFERED: 1
 
-  rain_barrel_sensor_emulator:
-    image: csiot/emulator    
-    ports:
-      - "127.0.0.1:5559:9292"
-    volumes:
-      - "./devices/rain_barrel_sensor/config.yaml:/emulator/config.yaml"
-
-  rain_barrel_sensor_software:
-    build:
-      context: devices/rain_barrel_sensor
-      dockerfile: ../../Dockerfile
-    restart: always
-    depends_on:
-      - rain_barrel_sensor_emulator
-    volumes:
-       - "./devices/rain_barrel_sensor/:/usr/src/app/"
-       - "./software_class/:/usr/src/app/software_class/"
-    environment:
-       HARDWARE_URL: http://rain_barrel_sensor_emulator:9292
-       DEVICE_NAME: rain_barrel_sensor
-       INTERVAL_TIME: 30
-       AWS_IOT_ENDPOINT: ${AWS_ENDPOINT}
-       PYTHONUNBUFFERED: 1
-
-  watering_valve_emulator:
-    image: csiot/emulator
-    ports:
-      - "127.0.0.1:5557:9292"
-    volumes:
-      - "./devices/watering_valve/config.yaml:/emulator/config.yaml"
-
-  watering_valve_software:
-    build:
-      context: devices/watering_valve
-      dockerfile: ../../Dockerfile
-    restart: always
-    depends_on:
-      - watering_valve_emulator
-    volumes:
-      - "./devices/watering_valve/:/usr/src/app/"
-      - "./software_class/:/usr/src/app/software_class/"
-    environment:
-      HARDWARE_URL: http://watering_valve_emulator:9292
-      DEVICE_NAME: watering_valve
-      AWS_IOT_ENDPOINT: ${AWS_ENDPOINT}
-      PYTHONUNBUFFERED: 1
-
-  watering_source_valve_emulator:
-    image: csiot/emulator
-    ports:
-      - "127.0.0.1:5560:9292"
-    volumes:
-      - "./devices/watering_source_valve/config.yaml:/emulator/config.yaml"
-
-  watering_source_valve_software:
-    build:
-      context: devices/watering_source_valve
-      dockerfile: ../../Dockerfile
-    restart: always
-    depends_on:
-      - watering_source_valve_emulator
-    volumes:
-      - "./devices/watering_source_valve/:/usr/src/app/"
-      - "./software_class/:/usr/src/app/software_class/"
-    environment:
-      HARDWARE_URL: http://watering_source_valve_emulator:9292
-      DEVICE_NAME: watering_source_valve
-      AWS_IOT_ENDPOINT: ${AWS_ENDPOINT}
-      PYTHONUNBUFFERED: 1
-
+#  soilmoisture3_emulator:
+#    image: csiot/emulator
+#    ports:
+#      - "127.0.0.1:5562:9292"
+#    volumes:
+#      - "./devices/soilMoisture3_sensor/config.yaml:/emulator/config.yaml"
+#
+#  soilmoisture3_software:
+#    build:
+#      context: devices/soilMoisture3_sensor
+#      dockerfile: ../../Dockerfile
+#    restart: always
+#    depends_on:
+#      - soilmoisture3_emulator
+#    volumes:
+#      - "./devices/soilMoisture3_sensor/:/usr/src/app/"
+#      - "./software_class/:/usr/src/app/software_class/"
+#    environment:
+#      HARDWARE_URL: http://soilmoisture3_emulator:9292
+#      DEVICE_NAME: soilMoisture3_sensor
+#      INTERVAL_TIME: 30
+#      AWS_IOT_ENDPOINT: ${AWS_ENDPOINT}
+#      PYTHONUNBUFFERED: 1
