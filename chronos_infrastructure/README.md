@@ -23,8 +23,8 @@ A region is required either in the AWS credential file or in the _main.tf_ file.
 this will be used, which is in the _main.tf_ file.
 
 To set dependencies between the different modules, for each module a ```*_dependencies``` output variable is declared,
-containing a list of resources, which need to be set as dependency in an other module. The '*' stands for the module,
-for which the dependencies it will be used for. To see what dependencies are set, see the _outputs.tf_ files in the 
+containing a list of resources, which needs to be set as dependency in an other module. The '*' stands for the module,
+for which the dependencies will be used for. To see what dependencies are set, see the _outputs.tf_ files in the 
 different modules.
 
 The dependencies list is passed in the root _main.tf_ file to the corresponding modules, which can read in the list with 
