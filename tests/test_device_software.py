@@ -3,18 +3,15 @@ from unittest.mock import patch, PropertyMock
 from iot_core.software_class.device_software import DeviceSoftware
 
 
-def test_function():
-    test_value = 5
-    return test_value
-
-
 class TestDeviceSoftware(TestCase):
 
     @classmethod
-    # set sample env variables
+    # set sample env variables (in real process set by docker-compose)
     @patch.dict('os.environ', {'HARDWARE_URL': "http://soilmoisture1_emulator:9292",
                                'DEVICE_NAME': "soilMoisture1_sensor"})
+    # skip super init
     @patch('iot_core.software_class.device_software.super')
+    # set, that files exist
     @patch('iot_core.software_class.device_software.DeviceSoftware.cert_files_exist', return_value=True)
     def setUpClass(cls, files_exist, mock_super):
         print('Create DeviceSoftware class')
@@ -22,6 +19,7 @@ class TestDeviceSoftware(TestCase):
         cls.device_software = DeviceSoftware()
 
     """----success tests----"""
+    """test if all functions are run correctly, if all connections have been successfully established"""
 
     # mock publish message function and return True
     @patch('iot_core.software_class.aws_iot_client.AWSIoTClient.publish_message_to_topic', return_value=True)
@@ -55,6 +53,7 @@ class TestDeviceSoftware(TestCase):
         self.assertEqual(expected, actual)
 
     """----aws iot client fail tests----"""
+    """test if all functions are failed, if the aws iot sdk connections is failed"""
 
     # mocking AWSIoTClient is None
     @patch('iot_core.software_class.aws_iot_client.AWSIoTClient', return_value=None)
@@ -87,6 +86,7 @@ class TestDeviceSoftware(TestCase):
         self.assertEqual(expected, actual)
 
     """----gpio request fail tests----"""
+    """test if all functions are failed, if the device gpio request failed"""
 
     def test_run_soil_moisture_no_gpio(self):
         print('\ntest_run_soil_moisture_no_gpio:')
