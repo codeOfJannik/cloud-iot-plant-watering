@@ -1,6 +1,6 @@
 # Terraform - IoT Events
 This terraform script is setting up and destroying the IoT Event models using the AWS CLI, because during the development 
-of the project there were no terraform scripts for AWS IoT Events resource.
+of the project there were no official terraform scripts for the AWS IoT Events resource.
 
 1. terraform apply
     * create event inputs
