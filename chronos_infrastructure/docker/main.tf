@@ -1,13 +1,51 @@
-resource "null_resource" "manage_docker_containers" {
+provider "docker" {}
 
+resource "docker_network" "chronos_network" {
+  name = "chronos_network"
+}
+
+resource "docker_container" "emulator_container" {
+  for_each = local.files
   depends_on = [var.dependencies]
-
-  provisioner "local-exec" {
-    command = "docker-compose -f iot_core/docker-compose.yml up --build -d"
+  image = "csiot/emulator:latest"
+  name  = "emulator_${basename(dirname(each.value))}"
+  networks_advanced {
+    name = "chronos_network"
   }
+  restart = "always"
+  volumes {
+    container_path = "/emulator/config.yaml"
+    host_path = abspath(each.value)
+  }
+  ports {
+    internal = "9292"
+    external = 5555 + index(tolist(local.files), each.value)
+  }
+  hostname = basename(dirname(each.value))
+}
 
-  provisioner "local-exec" {
-    when    = destroy
-    command = "docker-compose -f iot_core/docker-compose.yml down"
+resource "docker_container" "software_container" {
+  for_each = docker_container.emulator_container
+  depends_on = [var.dependencies]
+  image = "chronos/software:latest"
+  name  = "software_${each.value.hostname}"
+    networks_advanced {
+    name = "chronos_network"
+  }
+  restart = "always"
+  env = [
+     "HARDWARE_URL=http://${each.value.name}:9292",
+     "DEVICE_NAME=${each.value.hostname}",
+     "INTERVAL_TIME=30",
+     "AWS_IOT_ENDPOINT=${var.aws_endpoint}",
+     "PYTHONUNBUFFERED=1"
+  ]
+  volumes {
+    container_path = "/usr/src/app/"
+    host_path = abspath("iot_core/devices/${each.value.hostname}/")
+  }
+  volumes {
+    container_path = "/usr/src/app/software_class/"
+    host_path = abspath("iot_core/software_class/")
   }
 }
