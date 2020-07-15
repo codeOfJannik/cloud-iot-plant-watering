@@ -5,10 +5,12 @@ variable "dependencies" {
   default = []
 }
 
+// needed to perform a for each file loop
 locals {
   files = fileset(path.cwd, "/iot_core/devices/*/config.yaml")
 }
 
+// template to get aws endpoint from root main.tf
 variable "aws_endpoint" {
   type = string
   default = ""

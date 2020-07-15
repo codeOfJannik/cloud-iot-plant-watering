@@ -4,11 +4,13 @@ resource "docker_network" "chronos_network" {
   name = "chronos_network"
 }
 
+// emulator container for each device
 resource "docker_container" "emulator_container" {
-  for_each = local.files
   depends_on = [var.dependencies]
+  for_each = local.files
   image = "csiot/emulator:latest"
   name  = "emulator_${basename(dirname(each.value))}"
+  hostname = basename(dirname(each.value))
   networks_advanced {
     name = "chronos_network"
   }
@@ -21,12 +23,12 @@ resource "docker_container" "emulator_container" {
     internal = "9292"
     external = 5555 + index(tolist(local.files), each.value)
   }
-  hostname = basename(dirname(each.value))
 }
 
+// software container for each device
 resource "docker_container" "software_container" {
+  depends_on = [docker_container.emulator_container]
   for_each = docker_container.emulator_container
-  depends_on = [var.dependencies]
   image = "chronos/software:latest"
   name  = "software_${each.value.hostname}"
     networks_advanced {

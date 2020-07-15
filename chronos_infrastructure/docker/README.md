@@ -1,19 +1,23 @@
 # Terraform - Docker Devices + Software
-This terraform script is using the CLI docker-compose commmands _"up"_ and _"down"_, to perform the instructions, defined
-in the [docker-compose.yml](../../iot_core/docker-compose.yml) file: 
+This terraform script is deploying and destroying the devices as docker container. See [iot_core 
+readme](../../iot_core/README.md) for more details about this devices.
+The used ports are beginning from _'5555'_ until the count of device folders under [devices](../../iot_core/devices).
+Important: Check for free ports before setting up a new device. 
 
-1. terraform apply
-    * start docker images with _'docker-compose up --build -d'_
-    
-2. terraform destroy
-    * stop docker images with _'docker-compose down'_
-    
 Variables:
 * dependencies (list)
 
     template, to pass optional dependencies from root main.tf, actual used to wait for the iot_core thing depended 
     resources (see iot_core [outputs.tf](../iot_events/outputs.tf) and [readme](../iot_core/README.md) for more 
     information)
+
+* local.files (fileset)
+
+    path to every device config.yaml
+
+* aws_endpoint (string)
+
+    template to get the aws endpoint from root main.tf
 
 Outputs:
 - none
