@@ -12,3 +12,7 @@ output "docker_dependencies" {
     local_file.thing_key_pem
   ]
 }
+
+output "aws_endpoint" {
+  value = data.aws_iot_endpoint.endpointUrl.endpoint_address
+}
