@@ -52,6 +52,35 @@ class TestDeviceSoftware(TestCase):
         expected = None  # because abort while loop and no return value is expected (only false if exception)
         self.assertEqual(expected, actual)
 
+    # mock publish message function and return True
+    @patch('iot_core.software_class.aws_iot_client.AWSIoTClient.publish_message_to_topic', return_value=True)
+    # mock get gpio function and return a fake value
+    @patch('iot_core.software_class.device_software.get_gpio',
+           return_value={"bed_1_soilMoisture_threshold": {"state": {"value": 50}}, "bed_2_soilMoisture_threshold": {"state": {"value": 60}}})
+    def test_run_update_control_panel(self, mock_get, mock_publish):
+        print('\ntest_run_update_control_panel:')
+        # run loop only once:
+        sentinel = PropertyMock(side_effect=[1, 0])
+        type(self.device_software).running = sentinel
+
+        actual = self.device_software.run_update_control_panel()
+        expected = None  # because abort while loop and no return value is expected (only false if exception)
+        self.assertEqual(expected, actual)
+
+    # mock publish message function and return True
+    @patch('iot_core.software_class.aws_iot_client.AWSIoTClient.publish_message_to_topic', return_value=True)
+    # mock get gpio function and return a fake value
+    @patch('iot_core.software_class.device_software.get_gpio', return_value={'state': {'value': 50}})
+    def test_run_update_rain_barrel_sensor(self, mock_get, mock_publish):
+        print('\ntest_run_update_control_panel:')
+        # run loop only once:
+        sentinel = PropertyMock(side_effect=[1, 0])
+        type(self.device_software).running = sentinel
+
+        actual = self.device_software.run_update_rain_barrel_sensor()
+        expected = None  # because abort while loop and no return value is expected (only false if exception)
+        self.assertEqual(expected, actual)
+
     """----aws iot client fail tests----"""
     """test if all functions are failed, if the aws iot sdk connections is failed"""
 
@@ -59,7 +88,7 @@ class TestDeviceSoftware(TestCase):
     @patch('iot_core.software_class.aws_iot_client.AWSIoTClient', return_value=None)
     # # mock get gpio function and return a fake value
     @patch('iot_core.software_class.device_software.get_gpio', return_value={'state': {'value': 50}})
-    def test_run_soil_moisture_no_client(self, mock_get, mock_update):
+    def test_run_soil_moisture_no_client(self, mock_get, mock_client):
         print('\ntest_run_soil_moisture_no_IoT_client:')
         # run loop only once:
         sentinel = PropertyMock(side_effect=[1, 0])
@@ -85,6 +114,36 @@ class TestDeviceSoftware(TestCase):
         expected = False
         self.assertEqual(expected, actual)
 
+    # mocking AWSIoTClient is None
+    @patch('iot_core.software_class.aws_iot_client.AWSIoTClient', return_value=None)
+    # # mock get gpio function and return a fake value
+    @patch('iot_core.software_class.device_software.get_gpio',
+           return_value={"bed_1_soilMoisture_threshold": {"state": {"value": 50}},
+                         "bed_2_soilMoisture_threshold": {"state": {"value": 60}}})
+    def test_run_control_panel_no_client(self, mock_get, mock_client):
+        print('\ntest_run_control_panel_no_client:')
+        # run loop only once:
+        sentinel = PropertyMock(side_effect=[1, 0])
+        type(self.device_software).running = sentinel
+
+        actual = self.device_software.run_update_control_panel()
+        expected = False
+        self.assertEqual(expected, actual)
+
+    # mocking AWSIoTClient is None
+    @patch('iot_core.software_class.aws_iot_client.AWSIoTClient', return_value=None)
+    # mock get gpio function and return a fake value
+    @patch('iot_core.software_class.device_software.get_gpio', return_value={'state': {'value': 50}})
+    def test_run_rain_barrel_no_client(self, mock_get, mock_client):
+        print('\ntest_run_rain_barrel_no_client:')
+        # run loop only once:
+        sentinel = PropertyMock(side_effect=[1, 0])
+        type(self.device_software).running = sentinel
+
+        actual = self.device_software.run_update_rain_barrel_sensor()
+        expected = False
+        self.assertEqual(expected, actual)
+
     """----gpio request fail tests----"""
     """test if all functions are failed, if the device gpio request failed"""
 
@@ -105,6 +164,26 @@ class TestDeviceSoftware(TestCase):
         type(self.device_software).running = sentinel
 
         actual = self.device_software.run_water_valve()
+        expected = False
+        self.assertEqual(expected, actual)
+
+    def test_run_control_panel_no_gpio(self):
+        print('\ntest_run_soil_moisture_no_gpio:')
+        # run loop only once:
+        sentinel = PropertyMock(side_effect=[1, 0])
+        type(self.device_software).running = sentinel
+
+        actual = self.device_software.run_update_control_panel()
+        expected = False
+        self.assertEqual(expected, actual)
+
+    def test_run_rain_barrel_no_gpio(self):
+        print('\ntest_run_soil_moisture_no_gpio:')
+        # run loop only once:
+        sentinel = PropertyMock(side_effect=[1, 0])
+        type(self.device_software).running = sentinel
+
+        actual = self.device_software.run_update_rain_barrel_sensor()
         expected = False
         self.assertEqual(expected, actual)
 

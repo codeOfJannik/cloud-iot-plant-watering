@@ -7,7 +7,7 @@ are set up. This scripts are be split up in three modules:
 
 To get more information, see the corresponding module README's
 
-The [_main.tf_](./main.tf) in the _chronos_infrastructure_ directory contains the AWS profile and region name and run 
+The [_main.tf_](./main.tf) in the _chronos_infrastructure_ directory contains the AWS profile and region name and runs 
 the three different modules.
 The profile needs to be declared in the _.aws/credentials_ file with the following specifications:
 
