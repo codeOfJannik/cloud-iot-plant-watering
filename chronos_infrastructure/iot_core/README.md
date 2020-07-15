@@ -44,3 +44,7 @@ Outputs:
     needed in [docker](../docker) module, to wait until the [_iot_core_](../iot_core) module is ready, used to minimize 
     docker container restarts due to missing connection to AWS IoT Things.
     
+- aws_endpoint (string)
+    
+    the aws endpoint url, needed in docker module
+    
