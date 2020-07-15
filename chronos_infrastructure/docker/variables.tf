@@ -4,3 +4,12 @@ variable "dependencies" {
   type    = list(any)
   default = []
 }
+
+locals {
+  files = fileset(path.cwd, "/iot_core/devices/*/config.yaml")
+}
+
+variable "aws_endpoint" {
+  type = string
+  default = ""
+}
