@@ -34,9 +34,9 @@ Software Class: https://gitlab.mi.hdm-stuttgart.de/csiot/ss20/chronos/-/blob/mas
 #### 1. Update your AWS Credentials
 Put your valid AWS credentials to `~/.aws/credentials` and update the profile in chronos_infrastructure/main.tf
 
-#### 2. Build emulator image
-The csiot/emulator docker image needs to be build once. Run the build script
-located at `/emulator-chronos/build`
+#### 2. Build emulator and software image
+The csiot/emulator and chronos/software docker images need to be build once. Run the build script
+located at the root directory with `. build`
 
 #### 3. Initialize Terraform
 `terraform init chronos_infrastructure/`
