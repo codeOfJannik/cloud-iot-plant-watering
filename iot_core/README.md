@@ -1,18 +1,17 @@
 # IoT Core
-The _iot_core_ directory contains all devices, the according software classes, the docker file
-and the docker-compose.yml.
+The _iot_core_ directory contains all devices, the according software classes and the docker file for the software docker
+image.
 
 ## Devices
-Contains all current devices. To setup a new device check:
-https://gitlab.mi.hdm-stuttgart.de/csiot-tools/emulator/-/blob/master/README.md
+Contains all current devices. To setup a new device, append a new device directory to the devices folder.
+In such a device directory a config.yaml (see [emulator 
+setup](https://gitlab.mi.hdm-stuttgart.de/csiot-tools/emulator/-/blob/master/README.md) for more details), a policy.json 
+and a run.py file need to be declared. The config.yaml describe the emulator device and the following types are possible:
+- control panel (only one for all beds is necessary)
+- soil moisture sensor (new once can added with a new number in directory name and config file)
+- watering source valve (only one for all beds is necessary in case of only one rain barrel)
+- watering valve (only one per bed)
 
-## Software Class 
-Check https://gitlab.mi.hdm-stuttgart.de/csiot/ss20/chronos/-/blob/master/iot_core/software_class/README.md
 
-## docker-compose.yml
-Contains emulator and software volumes for all devices. For performance reasons the option 
-"restart : always" was introduced. 
-Important: Check for free ports before setting up a new device. 
-Following scheme was used for all devices:
-https://gitlab.mi.hdm-stuttgart.de/csiot-tools/emulator/-/blob/master/example/docker-compose.yml
-
+## Software Class
+Check [software readme](software_class/README.md) for details
