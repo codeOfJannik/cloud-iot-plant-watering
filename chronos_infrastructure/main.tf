@@ -21,4 +21,5 @@ module "docker" {
   // specified in iot_core:
   // Docker services will be started after all AWS resources are deployed
   dependencies = [module.iot_core.docker_dependencies]
+  aws_endpoint = module.iot_core.aws_endpoint
 }
