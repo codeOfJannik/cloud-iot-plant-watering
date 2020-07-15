@@ -16,9 +16,11 @@ in background sending emulated data to AWS based on following project:
 https://gitlab.mi.hdm-stuttgart.de/csiot-tools/emulator
 
 ## Further readme files for other important project aspects
-IoT Core: https://gitlab.mi.hdm-stuttgart.de/csiot/ss20/chronos/-/blob/master/iot_core/README.md
-IoT Events: https://gitlab.mi.hdm-stuttgart.de/csiot/ss20/chronos/-/blob/master/iot_events/README.md
-Software Class: https://gitlab.mi.hdm-stuttgart.de/csiot/ss20/chronos/-/blob/master/iot_core/software_class/README.md
+- [Infrastructure as Code (Terraform)](chronos_infrastructure/README.md)
+- [IoT Core](iot_core/README.md)
+- [IoT Events](iot_events/README.md)
+- [Software Class](chronos_infrastructure/README.md)
+- [Tests](tests/README.md)
 
 ## Setup instructions
 
@@ -54,17 +56,14 @@ Terraform creates the AWS IoT Events Inputs and Detector Models (see
 After that, Terraform creates an AWS IoT Thing, certificate and policy for each device declared by a
 directory in devices/chronos_iot/devices, as well as rules to send data to iot events (see 
 [iot_core module](chronos_infrastructure/iot_core/README.md)). 
-After creating the AWS resources, Terraform executes the docker-compose up command that sets up Docker container for 
-each device to emulate it (see [docker module](chronos_infrastructure/docker/README.md)). 
+After creating the AWS resources, Terraform deploys the docker container for 
+each device to emulate them (see [docker module](chronos_infrastructure/docker/README.md)). 
 After building the Docker containers, the **run.py** script is started in the container of each emulated device (see
-[docker-compose.yml](iot_core/docker-compose.yml) and [README](iot_core/README.md)).
+[Dockerfile](iot_core/Dockerfile) and [README](iot_core/README.md)).
 
 #### Information terraform destroy
 When `terraform destroy chronos_infrastructure/` is executed, the Docker containers are stopped and the AWS IoT
 resources are deleted in reversed order.
-
-# EDIT: Explain CI Runner, and run tests? 
-(for more information see [tests README](tests/README.md))
 
 ##Contributors
 Jannik Schlemmer (js329@hdm-stuttgart.de)
