@@ -6,6 +6,7 @@ resource "docker_network" "chronos_network" {
 
 // emulator container for each device
 resource "docker_container" "emulator_container" {
+  depends_on = [var.dependencies]
   for_each = local.files
   image = "csiot/emulator:latest"
   name  = "emulator_${basename(dirname(each.value))}"
@@ -26,7 +27,7 @@ resource "docker_container" "emulator_container" {
 
 // software container for each device
 resource "docker_container" "software_container" {
-  depends_on = [docker_container.emulator_container, var.dependencies]
+  depends_on = [docker_container.emulator_container]
   for_each = docker_container.emulator_container
   image = "chronos/software:latest"
   name  = "software_${each.value.hostname}"
@@ -35,15 +36,18 @@ resource "docker_container" "software_container" {
   }
   restart = "always"
   env = [
-     "HARDWARE_URL=http://${each.value.name}:9292",
-     "DEVICE_NAME=${each.value.hostname}",
-     "INTERVAL_TIME=30",
-     "AWS_IOT_ENDPOINT=${var.aws_endpoint}",
-     "PYTHONUNBUFFERED=1"
+    "HARDWARE_URL=http://${each.value.name}:9292",
+    "DEVICE_NAME=${each.value.hostname}",
+    "AWS_IOT_ENDPOINT=${var.aws_endpoint}",
+    "PYTHONUNBUFFERED=1"
   ]
   volumes {
     container_path = "/usr/src/app/"
     host_path = abspath("iot_core/devices/${each.value.hostname}/")
+  }
+  volumes {
+    container_path = "/usr/src/app/run.py"
+    host_path = abspath("iot_core/run.py")
   }
   volumes {
     container_path = "/usr/src/app/software_class/"
