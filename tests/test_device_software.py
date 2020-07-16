@@ -13,7 +13,8 @@ class TestDeviceSoftware(TestCase):
     @patch('iot_core.software_class.device_software.super')
     # set, that files exist
     @patch('iot_core.software_class.device_software.DeviceSoftware.cert_files_exist', return_value=True)
-    def setUpClass(cls, files_exist, mock_super):
+    @patch('iot_core.software_class.device_software.DeviceSoftware.read_settings_yaml', return_value=(2, 1, "soil_moisture"))
+    def setUpClass(cls, settings, files_exist, mock_super):
         print('Create DeviceSoftware class')
         # call class and skip super init
         cls.device_software = DeviceSoftware()
