@@ -36,3 +36,21 @@ gpios:
 
       # the unit (UI only, empty string for unitless)
       unit: "nFk (%)"
+
+  rain_barrel_threshold:
+    type: sensor
+    state:
+      # the initial value
+      value: 10
+
+      # the minimal value
+      min: 0
+
+      # the maximum value
+      max: 100
+
+      # the step-size if the value goes up or down
+      increment: 2
+
+      # the unit (UI only, empty string for unitless)
+      unit: "(%)"
