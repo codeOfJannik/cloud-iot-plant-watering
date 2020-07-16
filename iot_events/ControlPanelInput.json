@@ -3,8 +3,8 @@
     "inputDescription": "control panel payload",
     "inputDefinition": {
         "attributes": [
-            { "jsonPath": "reported.bed_1_soilMoisture_threshold"},
-            { "jsonPath": "reported.bed_2_soilMoisture_threshold"}
+            {"jsonPath": "value"},
+            {"jsonPath": "bed_id"}
         ]
     }
 }
