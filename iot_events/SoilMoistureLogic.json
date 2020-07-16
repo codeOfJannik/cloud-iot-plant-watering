@@ -2,6 +2,124 @@
     "detectorModelDefinition": {
         "states": [
             {
+                "stateName": "CheckState",
+                "onInput": {
+                    "events": [
+                        {
+                            "eventName": "CalculateAverage",
+                            "condition": "currentInput(\"SoilMoistureInput\")",
+                            "actions": [
+                                {
+                                    "setVariable": {
+                                        "variableName": "average",
+                                        "value": "( $input.SoilMoistureInput.value + $variable.average ) / 2"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "eventName": "SetThreshold",
+                            "condition": "currentInput(\"ControlPanelInput\")",
+                            "actions": [
+                                {
+                                    "setVariable": {
+                                        "variableName": "soil_moisture_threshold",
+                                        "value": "$input.ControlPanelInput.value"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "eventName": "setBedIDSoilMoistureInput",
+                            "condition": "isUndefined($variable.bed_id) && currentInput(\"SoilMoistureInput\")",
+                            "actions": [
+                                {
+                                    "setVariable": {
+                                        "variableName": "bed_id",
+                                        "value": "$input.SoilMoistureInput.bed_id"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "eventName": "setBedIDControlPanelInput",
+                            "condition": "isUndefined($variable.bed_id) && currentInput(\"ControlPanelInput\")",
+                            "actions": [
+                                {
+                                    "setVariable": {
+                                        "variableName": "bed_id",
+                                        "value": "$input.ControlPanelInput.bed_id"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "transitionEvents": [
+                        {
+                            "eventName": "IsNormal",
+                            "condition": "($variable.IsValveOpen && $variable.average  > ($variable.soil_moisture_threshold +10)) || (!$variable.IsValveOpen && $variable.average >= $variable.soil_moisture_threshold)",
+                            "actions": [],
+                            "nextState": "NormalSoil"
+                        },
+                        {
+                            "eventName": "IsDry",
+                            "condition": "($variable.IsValveOpen && $variable.average  < ($variable.soil_moisture_threshold +10)) || (!$variable.IsValveOpen && $variable.average <= $variable.soil_moisture_threshold)",
+                            "actions": [
+                                {
+                                    "resetTimer": {
+                                        "timerName": "CheckTimer"
+                                    }
+                                }
+                            ],
+                            "nextState": "DrySoil"
+                        }
+                    ]
+                },
+                "onEnter": {
+                    "events": [
+                        {
+                            "eventName": "InitAverageVar",
+                            "condition": "isUndefined($variable.average)",
+                            "actions": [
+                                {
+                                    "setVariable": {
+                                        "variableName": "average",
+                                        "value": "50"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "eventName": "InitThresholdVar",
+                            "condition": "isUndefined($variable.soil_moisture_threshold)",
+                            "actions": [
+                                {
+                                    "setVariable": {
+                                        "variableName": "soil_moisture_threshold",
+                                        "value": "50"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "eventName": "InitIsValveOpen",
+                            "condition": "isUndefined($variable.IsValveOpen)",
+                            "actions": [
+                                {
+                                    "setVariable": {
+                                        "variableName": "IsValveOpen",
+                                        "value": "false"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "onExit": {
+                    "events": []
+                }
+            },
+            {
                 "stateName": "DrySoil",
                 "onInput": {
                     "events": [
@@ -47,7 +165,7 @@
                             "actions": [
                                 {
                                     "iotTopicPublish": {
-                                        "mqttTopic": "$aws/things/watering_valve_${$variable.bed_id}/shadow/update",
+                                        "mqttTopic": "'$aws/things/watering_valve_' + '${$variable.bed_id}' + '/shadow/update'",
                                         "payload": {
                                             "contentExpression": "'{\\\"state\\\": {\\\"desired\\\":  {\\\"valve_open\\\": true}}}'",
                                             "type": "JSON"
@@ -81,63 +199,6 @@
                 }
             },
             {
-                "stateName": "CheckState",
-                "onInput": {
-                    "events": [
-                        {
-                            "eventName": "CalculateAverage",
-                            "condition": "currentInput(\"SoilMoistureInput\")",
-                            "actions": [
-                                {
-                                    "setVariable": {
-                                        "variableName": "average",
-                                        "value": "( $input.SoilMoistureInput.value + $variable.average ) / 2"
-                                    }
-                                }
-                            ]
-                        },
-                        {
-                            "eventName": "SetThreshold",
-                            "condition": "currentInput(\"ControlPanelInput\")",
-                            "actions": [
-                                {
-                                    "setVariable": {
-                                        "variableName": "soil_moisture_threshold",
-                                        "value": "$input.ControlPanelInput.value"
-                                    }
-                                }
-                            ]
-                        }
-                    ],
-                    "transitionEvents": [
-                        {
-                            "eventName": "IsNormal",
-                            "condition": "($variable.IsValveOpen && $variable.average  > ($variable.soil_moisture_threshold +10)) || (!$variable.IsValveOpen && $variable.average >= $variable.soil_moisture_threshold)",
-                            "actions": [],
-                            "nextState": "NormalSoil"
-                        },
-                        {
-                            "eventName": "IsDry",
-                            "condition": "($variable.IsValveOpen && $variable.average  < ($variable.soil_moisture_threshold +10)) || (!$variable.IsValveOpen && $variable.average <= $variable.soil_moisture_threshold)",
-                            "actions": [
-                                {
-                                    "resetTimer": {
-                                        "timerName": "CheckTimer"
-                                    }
-                                }
-                            ],
-                            "nextState": "DrySoil"
-                        }
-                    ]
-                },
-                "onEnter": {
-                    "events": []
-                },
-                "onExit": {
-                    "events": []
-                }
-            },
-            {
                 "stateName": "NormalSoil",
                 "onInput": {
                     "events": [
@@ -164,18 +225,6 @@
                                     }
                                 }
                             ]
-                        },
-                        {
-                            "eventName": "setBedID",
-                            "condition": "isUndefined($variable.bed_id) && currentInput(\"SoilMoistureInput\")",
-                            "actions": [
-                                {
-                                    "setVariable": {
-                                        "variableName": "bed_id",
-                                        "value": "$input.SoilMoistureInput.bed_id"
-                                    }
-                                }
-                            ]
                         }
                     ],
                     "transitionEvents": [
@@ -195,7 +244,7 @@
                             "actions": [
                                 {
                                     "iotTopicPublish": {
-                                        "mqttTopic": "$aws/things/watering_valve_${$variable.bed_id}/shadow/update",
+                                        "mqttTopic": "'$aws/things/watering_valve_' + '${$variable.bed_id}' + '/shadow/update'",
                                         "payload": {
                                             "contentExpression": "'{\\\"state\\\": {\\\"desired\\\":  {\\\"valve_open\\\": false}}}'",
                                             "type": "JSON"
@@ -211,31 +260,7 @@
                             ]
                         },
                         {
-                            "eventName": "InitAverageVar",
-                            "condition": "isUndefined($variable.average)",
-                            "actions": [
-                                {
-                                    "setVariable": {
-                                        "variableName": "average",
-                                        "value": "50"
-                                    }
-                                }
-                            ]
-                        },
-                        {
-                            "eventName": "InitThresholdVar",
-                            "condition": "isUndefined($variable.soil_moisture_threshold)",
-                            "actions": [
-                                {
-                                    "setVariable": {
-                                        "variableName": "soil_moisture_threshold",
-                                        "value": "50"
-                                    }
-                                }
-                            ]
-                        },
-                        {
-                            "eventName": "CreateTimer",
+                            "eventName": "SetTimer",
                             "condition": "true",
                             "actions": [
                                 {
@@ -253,7 +278,7 @@
                 }
             }
         ],
-        "initialStateName": "NormalSoil"
+        "initialStateName": "CheckState"
     },
     "detectorModelDescription": "Soil Moisture Water on, off Logic",
     "detectorModelName": "SoilMoistureLogic",
