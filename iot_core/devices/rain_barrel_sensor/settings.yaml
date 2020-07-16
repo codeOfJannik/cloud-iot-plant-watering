@@ -1,0 +1,3 @@
+time_interval: 30
+device_type: sensor
+iot_type: rain_barrel

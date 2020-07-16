@@ -1,7 +1,7 @@
-name: watering_valve
+name: watering_valve bed 1
 gpios:
 
-  watering_valve:
+  valve:
     type: switch
     state:
       open: true

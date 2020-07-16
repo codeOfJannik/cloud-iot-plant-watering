@@ -1,4 +1,4 @@
-name: watering_source_valve
+name: watering_valve bed 2
 gpios:
 
   valve:

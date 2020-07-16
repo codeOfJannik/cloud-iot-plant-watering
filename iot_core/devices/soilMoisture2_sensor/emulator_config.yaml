@@ -1,4 +1,4 @@
-name: soilMoisture2_sensor
+name: soilMoisture2_sensor bed 1
 gpios:
 
   soilMoistureSensor:
