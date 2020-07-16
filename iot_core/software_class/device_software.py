@@ -2,6 +2,7 @@ import time
 import os
 import urllib.request
 import json
+import yaml
 from .aws_iot_client import AWSIoTClient
 import sys
 
@@ -17,7 +18,12 @@ class DeviceSoftware(AWSIoTClient):
         # get environment variables (set in docker-compose file)
         self.HARDWARE_URL = os.getenv('HARDWARE_URL')
         self.DEVICE_NAME = os.getenv('DEVICE_NAME')
-        self.INTERVAL_TIME = int(os.getenv('INTERVAL_TIME', default=3))
+        # read in yaml
+        with open('settings.yaml', "r") as file:
+            settings = yaml.load(file, Loader=yaml.FullLoader)
+        self.INTERVAL_TIME = settings.get('time_interval', 30)
+        self.BED_ID = settings.get('bed')
+        self.IOT_TYPE = settings['iot_type']
         # set aws client variables
         self.root_ca = os.path.abspath(cert_directory + "root-CA.crt")
         self.certificate = os.path.abspath(self.DEVICE_NAME + ".cert.pem")
@@ -26,6 +32,15 @@ class DeviceSoftware(AWSIoTClient):
             super().__init__(self.root_ca, self.certificate, self.private_key, self.DEVICE_NAME)
         else:
             sys.exit('CA Files not exists')
+
+        if self.IOT_TYPE == "water_valve":
+            self.run_water_valve()
+        elif self.IOT_TYPE == "soil_moisture":
+            self.run_update_soil_moisture()
+        elif self.IOT_TYPE == "control_panel":
+            self.run_update_control_panel()
+        elif self.IOT_TYPE == "rain_barrel":
+            self.run_update_rain_barrel_sensor()
 
     def cert_files_exist(self):
         return os.path.exists(self.root_ca) and os.path.exists(self.certificate) and os.path.exists(self.private_key)
@@ -43,12 +58,9 @@ class DeviceSoftware(AWSIoTClient):
                 url = '{url}/gpios'.format(url=self.HARDWARE_URL)
                 # get current state from gpio
                 data = get_gpio(url=url)
-                keys = list(data)
-                shadow_data = {}
-                for key in keys:
-                    shadow_data[key] = data[key]["state"]["value"]
-
-                self.update_device_shadow(shadow_data)
+                for index, key in enumerate(data):
+                    shadow_data = {"value": data[key]["state"]["value"], "bed_id": index + 1}
+                    self.update_device_shadow(shadow_data, shadow_name=key)
 
             except ConnectionRefusedError:
                 print('could not connect to {url}'.format(url=self.HARDWARE_URL))
@@ -94,7 +106,8 @@ class DeviceSoftware(AWSIoTClient):
                 url = '{url}/gpios/soilMoistureSensor'.format(url=self.HARDWARE_URL)
                 # get current state from gpio
                 sensor_value = get_gpio(url=url)["state"]["value"]
-                data = {"value": sensor_value}
+                data = {"value": sensor_value,
+                        "bed_id": self.BED_ID}
 
                 self.update_device_shadow(data)
 
@@ -111,7 +124,7 @@ class DeviceSoftware(AWSIoTClient):
         :return: [bool] False if exception else repeat
         """
         print(f'Starting software')
-        url = '{url}/gpios/{sensor}'.format(url=self.HARDWARE_URL, sensor=self.DEVICE_NAME)
+        url = f'{self.HARDWARE_URL}/gpios/valve'
 
         def custom_callback(client, userdata, message):
             """
@@ -146,6 +159,8 @@ class DeviceSoftware(AWSIoTClient):
             # get current state from gpio
             sensor_value = not get_gpio(url=url)["state"]["open"]
             data = {"valve_open": sensor_value}
+            if self.BED_ID is not None:
+                data['bed_id'] = self.BED_ID
             # update device shadow with current state
             print(f'update shadow value with data: {data}')
             self.update_device_shadow(data)
@@ -169,16 +184,19 @@ class DeviceSoftware(AWSIoTClient):
         while self.running:
             pass
 
-    def update_device_shadow(self, data):
+    def update_device_shadow(self, data, shadow_name=None):
         message = {
             "state": {
                 "reported": data
             }
         }
         json_message = json.dumps(message)
-
         # publish message to update device shadow with current value
-        self.publish_message_to_topic(json_message, "$aws/things/{device}/shadow/update".format(device=self.DEVICE_NAME), 0)
+        if shadow_name:
+            topic = f"$aws/things/{self.DEVICE_NAME}/shadow/name/{shadow_name}/update"
+        else:
+            topic = f"$aws/things/{self.DEVICE_NAME}/shadow/update"
+        print(self.publish_message_to_topic(json_message, topic, 0))
 
 
 """----gpio functions----"""
