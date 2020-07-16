@@ -128,6 +128,7 @@ class DeviceSoftware(AWSIoTClient):
         """
         print(f'Starting software')
         url = f'{self.HARDWARE_URL}/gpios/valve'
+        print("url:" + url)
 
         def custom_callback(client, userdata, message):
             """
@@ -169,7 +170,7 @@ class DeviceSoftware(AWSIoTClient):
             self.update_device_shadow(data)
             # subscribe to IoT Service and define callback function, return if callback is false, else repeat
             delta_topic = "$aws/things/{device}/shadow/update/delta".format(device=self.DEVICE_NAME)
-            print('subscribe...')
+            print('subscribe to ' + delta_topic)
 
             if self.subscribe_to_topic(delta_topic, custom_callback, 0):
                 pass
