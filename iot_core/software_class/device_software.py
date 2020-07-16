@@ -8,7 +8,7 @@ import sys
 
 
 class DeviceSoftware(AWSIoTClient):
-    def __init__(self, cert_directory: str = "../cert/"):
+    def __init__(self, cert_directory: str = "../cert/", settings_yaml_path="settings.yaml"):
         """
         Class to run device software in a loop
         :param cert_directory: defines, where to find the aws root cert for IoT Service
@@ -19,11 +19,8 @@ class DeviceSoftware(AWSIoTClient):
         self.HARDWARE_URL = os.getenv('HARDWARE_URL')
         self.DEVICE_NAME = os.getenv('DEVICE_NAME')
         # read in yaml
-        with open('settings.yaml', "r") as file:
-            settings = yaml.load(file, Loader=yaml.FullLoader)
-        self.INTERVAL_TIME = settings.get('time_interval', 30)
-        self.BED_ID = settings.get('bed')
-        self.IOT_TYPE = settings['iot_type']
+        self.settings_yaml_path = settings_yaml_path
+        self.INTERVAL_TIME, self.BED_ID, self.IOT_TYPE = self.read_settings_yaml()
         # set aws client variables
         self.root_ca = os.path.abspath(cert_directory + "root-CA.crt")
         self.certificate = os.path.abspath(self.DEVICE_NAME + ".cert.pem")
@@ -41,6 +38,12 @@ class DeviceSoftware(AWSIoTClient):
             self.run_update_control_panel()
         elif self.IOT_TYPE == "rain_barrel":
             self.run_update_rain_barrel_sensor()
+
+    def read_settings_yaml(self):
+        # read in yaml
+        with open(self.settings_yaml_path, "r") as file:
+            settings = yaml.load(file, Loader=yaml.FullLoader)
+        return settings.get('time_interval', 30), settings.get('bed'), settings['iot_type']
 
     def cert_files_exist(self):
         return os.path.exists(self.root_ca) and os.path.exists(self.certificate) and os.path.exists(self.private_key)
