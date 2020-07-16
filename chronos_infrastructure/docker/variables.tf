@@ -7,7 +7,7 @@ variable "dependencies" {
 
 // needed to perform a for each file loop
 locals {
-  files = fileset(path.cwd, "/iot_core/devices/*/config.yaml")
+  files = fileset(path.cwd, "/iot_core/devices/*/emulator_config.yaml")
 }
 
 // template to get aws endpoint from root main.tf

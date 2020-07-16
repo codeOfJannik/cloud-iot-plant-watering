@@ -6,7 +6,6 @@ resource "docker_network" "chronos_network" {
 
 // emulator container for each device
 resource "docker_container" "emulator_container" {
-  depends_on = [var.dependencies]
   for_each = local.files
   image = "csiot/emulator:latest"
   name  = "emulator_${basename(dirname(each.value))}"
@@ -27,7 +26,7 @@ resource "docker_container" "emulator_container" {
 
 // software container for each device
 resource "docker_container" "software_container" {
-  depends_on = [docker_container.emulator_container]
+  depends_on = [docker_container.emulator_container, var.dependencies]
   for_each = docker_container.emulator_container
   image = "chronos/software:latest"
   name  = "software_${each.value.hostname}"
