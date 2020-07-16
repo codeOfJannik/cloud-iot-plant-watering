@@ -8,4 +8,5 @@ test:
         - apk update
         - apk add --update-cache python3 py-pip
         - pip3 install pip AWSIoTPythonSDK
+        - pip3 install pip pyyaml
         - python3 -m unittest discover -s tests/
