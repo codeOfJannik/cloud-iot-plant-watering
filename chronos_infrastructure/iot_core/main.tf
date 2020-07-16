@@ -23,7 +23,7 @@ data "aws_arn" "thing_instance" {
 resource "aws_iot_policy" "thing_policy" {
   for_each = local.files
   name = "${basename(dirname(each.value))}${var.policy}"
-  policy = templatefile(each.value,  {
+  policy = templatefile("${path.cwd}/iot_core/${yamldecode(file(each.value))["device_type"]}_policy.json",  {
     clientId = aws_iot_thing.thing[each.key].name,
     arn = "arn:${data.aws_arn.thing_instance[each.key].partition}:${data.aws_arn.thing_instance[each.key].service}:${data.aws_arn.thing_instance[each.key].region}:${data.aws_arn.thing_instance[each.key].account}:"
   }
@@ -69,7 +69,7 @@ resource "aws_iot_topic_rule" "control_panel_rule" {
   name        = "sendControlPanel"
   description = "send control panel data"
   enabled     = true
-  sql         = "SELECT state.reported FROM '$aws/things/control_panel/shadow/update/accepted'"
+  sql         = "SELECT state.reported.value, state.reported.bed_id FROM '$aws/things/control_panel/shadow/name/+/update/accepted'"
   sql_version = "2016-03-23"
 
   iot_events {
@@ -83,7 +83,7 @@ resource "aws_iot_topic_rule" "soil_moisture_rule" {
   name        = "sendSoilMoisture"
   description = "send soil moisture"
   enabled     = true
-  sql         = "SELECT topic(3) as sensorId, state.reported.value FROM '$aws/things/+/shadow/update/accepted' WHERE regexp_matches(topic(3), 'soilMoisture[0-9]{1,2}_sensor')"
+  sql         = "SELECT state.reported.value, state.reported.bed_id FROM '$aws/things/+/shadow/update/accepted' WHERE regexp_matches(topic(3), 'soilMoisture[0-9]{1,2}_sensor')"
   sql_version = "2016-03-23"
 
   iot_events {
@@ -97,7 +97,7 @@ resource "aws_iot_topic_rule" "rain_barrel_rule" {
   name        = "sendRainBarrelReadings"
   description = "send rain barrel data"
   enabled     = true
-  sql         = "SELECT topic(3) as sensorId, state.reported.value FROM '$aws/things/+/shadow/update/accepted' WHERE regexp_matches(topic(3), 'rain_barrel_sensor')"
+  sql         = "SELECT state.reported.value FROM '$aws/things/+/shadow/update/accepted' WHERE regexp_matches(topic(3), 'rain_barrel_sensor')"
   sql_version = "2016-03-23"
 
   iot_events {

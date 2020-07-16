@@ -1,6 +1,6 @@
 // get path to every device policy
 locals {
-  files = fileset(path.cwd, "/iot_core/devices/*/policy.json")
+  files = fileset(path.cwd, "/iot_core/devices/*/settings.yaml")
 }
 
 // template variable for name ending in aws_iot_policy resource
