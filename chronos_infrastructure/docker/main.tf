@@ -31,7 +31,7 @@ resource "docker_container" "software_container" {
   for_each = docker_container.emulator_container
   image = "chronos/software:latest"
   name  = "software_${each.value.hostname}"
-    networks_advanced {
+  networks_advanced {
     name = "chronos_network"
   }
   restart = "always"
