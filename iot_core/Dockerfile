@@ -4,6 +4,7 @@ WORKDIR /usr/src/cert
 
 RUN curl https://www.amazontrust.com/repository/AmazonRootCA1.pem > root-CA.crt
 RUN pip install AWSIoTPythonSDK
+RUN pip install pyyaml
 RUN ls -la
 
 WORKDIR ../app
