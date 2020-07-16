@@ -6,9 +6,14 @@ resource "null_resource" "create_event_inputs" {
     command = "aws iotevents create-input --cli-input-json file://iot_events/RainBarrelSensorInput.json --profile ${var.aws_profile} --region ${var.aws_region}"
   }
 
-  // control panel
+  // control panel soil moisture thresholds
   provisioner "local-exec" {
     command = "aws iotevents create-input --cli-input-json file://iot_events/ControlPanelInput.json --profile ${var.aws_profile} --region ${var.aws_region}"
+  }
+
+  // control panel rain barrel thresholds
+  provisioner "local-exec" {
+    command = "aws iotevents create-input --cli-input-json file://iot_events/RainBarrelThresholdInput.json --profile ${var.aws_profile} --region ${var.aws_region}"
   }
 
   // soil moisture sensor
@@ -59,10 +64,16 @@ resource "null_resource" "destroy_event_models_inputs" {
     command = "aws iotevents delete-input --input-name RainBarrelSensorInput --profile ${var.aws_profile} --region ${var.aws_region}"
   }
 
-  // control panel input
+  // control panel soil moisture thresholds
   provisioner "local-exec" {
     when    = destroy
     command = "aws iotevents delete-input --input-name ControlPanelInput --profile ${var.aws_profile} --region ${var.aws_region}"
+  }
+
+  // control panel rain barrel thresholds
+  provisioner "local-exec" {
+    when    = destroy
+    command = "aws iotevents delete-input --input-name RainBarrelThresholdInput --profile ${var.aws_profile} --region ${var.aws_region}"
   }
 
   // soil moisture sensor input

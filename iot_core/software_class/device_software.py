@@ -62,7 +62,9 @@ class DeviceSoftware(AWSIoTClient):
                 # get current state from gpio
                 data = get_gpio(url=url)
                 for index, key in enumerate(data):
-                    shadow_data = {"value": data[key]["state"]["value"], "bed_id": index + 1}
+                    shadow_data = {"value": data[key]["state"]["value"]}
+                    if index != 0:
+                        shadow_data["bed_id"] = index
                     self.update_device_shadow(shadow_data, shadow_name=key)
 
             except ConnectionRefusedError:

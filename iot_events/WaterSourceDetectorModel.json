@@ -4,11 +4,24 @@
             {
                 "stateName": "UseWaterPipe",
                 "onInput": {
-                    "events": [],
+                    "events": [
+                        {
+                            "eventName": "OnRainBarrelThresholdInput",
+                            "condition": "currentInput(\"RainBarrelThresholdInput\")",
+                            "actions": [
+                                {
+                                    "setVariable": {
+                                        "variableName": "rain_barrel_threshold",
+                                        "value": "$input.RainBarrelThresholdInput.value"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
                     "transitionEvents": [
                         {
                             "eventName": "RainBarrelFilled",
-                            "condition": "$input.RainBarrelSensorInput.value > 10",
+                            "condition": "$input.RainBarrelSensorInput.value > $variable.rain_barrel_threshold",
                             "actions": [],
                             "nextState": "UseRainBarrel"
                         }
@@ -30,6 +43,18 @@
                                     }
                                 }
                             ]
+                        },
+                        {
+                            "eventName": "initRainBarrelThrsholdVar",
+                            "condition": "isUndefined($variable.rain_barrel_threshold)",
+                            "actions": [
+                                {
+                                    "setVariable": {
+                                        "variableName": "rain_barrel_threshold",
+                                        "value": "10"
+                                    }
+                                }
+                            ]
                         }
                     ]
                 },
@@ -40,11 +65,24 @@
             {
                 "stateName": "UseRainBarrel",
                 "onInput": {
-                    "events": [],
+                    "events": [
+                        {
+                            "eventName": "OnRainBarrelThresoldInput",
+                            "condition": "currentInput(\"RainBarrelThresholdInput\")",
+                            "actions": [
+                                {
+                                    "setVariable": {
+                                        "variableName": "rain_barrel_threshold",
+                                        "value": "$input.RainBarrelThresholdInput.value"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
                     "transitionEvents": [
                         {
                             "eventName": "RainBarrelEmpty",
-                            "condition": "$input.RainBarrelSensorInput.value < 10",
+                            "condition": "$input.RainBarrelSensorInput.value < $variable.rain_barrel_threshold",
                             "actions": [],
                             "nextState": "UseWaterPipe"
                         }

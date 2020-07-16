@@ -1,42 +1,6 @@
 name: control_panel
 gpios:
 
-  bed_1_soilMoisture_threshold:
-    type: sensor
-    state:
-      # the initial value
-      value: 50
-      
-      # the minimal value
-      min: 0
-      
-      # the maximum value
-      max: 300
-      
-      # the step-size if the value goes up or down
-      increment: 1
-      
-      # the unit (UI only, empty string for unitless)
-      unit: "nFk (%)"
-
-  bed_2_soilMoisture_threshold:
-    type: sensor
-    state:
-      # the initial value
-      value: 60
-
-      # the minimal value
-      min: 0
-
-      # the maximum value
-      max: 300
-
-      # the step-size if the value goes up or down
-      increment: 1
-
-      # the unit (UI only, empty string for unitless)
-      unit: "nFk (%)"
-
   rain_barrel_threshold:
     type: sensor
     state:
@@ -54,3 +18,39 @@ gpios:
 
       # the unit (UI only, empty string for unitless)
       unit: "(%)"
+
+  bed_1_soilMoisture_threshold:
+    type: sensor
+    state:
+      # the initial value
+      value: 50
+      
+      # the minimal value
+      min: 0
+      
+      # the maximum value
+      max: 300
+      
+      # the step-size if the value goes up or down
+      increment: 1
+      
+      # the unit (UI only, empty string for unitless)
+      unit: "nFk(%)"
+
+  bed_2_soilMoisture_threshold:
+    type: sensor
+    state:
+      # the initial value
+      value: 60
+
+      # the minimal value
+      min: 0
+
+      # the maximum value
+      max: 300
+
+      # the step-size if the value goes up or down
+      increment: 1
+
+      # the unit (UI only, empty string for unitless)
+      unit: " nFk(%)"

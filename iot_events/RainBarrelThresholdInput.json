@@ -1,0 +1,9 @@
+{
+    "inputName": "RainBarrelThresholdInput",
+    "inputDescription": "rain barrel threshold data",
+    "inputDefinition": {
+        "attributes": [
+            {"jsonPath": "value"}
+        ]
+    }
+}

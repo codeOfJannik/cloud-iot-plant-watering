@@ -63,17 +63,31 @@ resource "local_file" "aws_endpoint" {
 }
 
 // create rules to pass information to AWS IoT Events (next three resources)
-resource "aws_iot_topic_rule" "control_panel_rule" {
+resource "aws_iot_topic_rule" "control_panel_soil_moisture_threshold_rule" {
   depends_on = [var.dependencies]
 
-  name        = "sendControlPanel"
-  description = "send control panel data"
+  name        = "sendSoilMoistureThreshold"
+  description = "send soil moisture threshold data"
   enabled     = true
-  sql         = "SELECT state.reported.value, state.reported.bed_id FROM '$aws/things/control_panel/shadow/name/+/update/accepted'"
+  sql         = "SELECT state.reported.value, state.reported.bed_id FROM '$aws/things/control_panel/shadow/name/+/update/accepted' WHERE regexp_matches(topic(6), 'bed[0-9]{1,2}_soilMoisture_threshold')"
   sql_version = "2016-03-23"
 
   iot_events {
     input_name = "ControlPanelInput"
+    role_arn   = aws_iam_role.core_rule_role.arn
+  }
+}
+resource "aws_iot_topic_rule" "control_panel_rain_barrel_threshold_rule" {
+  depends_on = [var.dependencies]
+
+  name        = "sendRainBarrelThreshold"
+  description = "send rain barrel threshold data"
+  enabled     = true
+  sql         = "SELECT state.reported.value FROM '$aws/things/control_panel/shadow/name/+/update/accepted' WHERE regexp_matches(topic(6), 'rain_barrel_threshold')"
+  sql_version = "2016-03-23"
+
+  iot_events {
+    input_name = "RainBarrelThresholdInput"
     role_arn   = aws_iam_role.core_rule_role.arn
   }
 }
@@ -123,13 +137,9 @@ resource "aws_iam_policy" "core_rule_policy" {
         "Resource": [
             "arn:aws:iotevents:*:${data.aws_caller_identity.current.account_id}:input/SoilMoistureInput",
             "arn:aws:iotevents:*:${data.aws_caller_identity.current.account_id}:input/ControlPanelInput",
-            "arn:aws:iotevents:*:${data.aws_caller_identity.current.account_id}:input/RainBarrelSensorInput"
+            "arn:aws:iotevents:*:${data.aws_caller_identity.current.account_id}:input/RainBarrelSensorInput",
+            "arn:aws:iotevents:*:${data.aws_caller_identity.current.account_id}:input/RainBarrelThresholdInput"
         ]
-      },
-      {
-        "Effect": "Allow",
-        "Action": "iot:Publish",
-        "Resource": "arn:aws:iot:*:${data.aws_caller_identity.current.account_id}:topic/events/rules/test"
       }
     ]
   }
