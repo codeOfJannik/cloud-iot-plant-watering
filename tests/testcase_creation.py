@@ -1,5 +1,5 @@
 from unittest import TestCase, main
-from unittest.mock import patch, PropertyMock, Mock
+from unittest.mock import patch
 from iot_core.software_class.device_software import DeviceSoftware
 
 
