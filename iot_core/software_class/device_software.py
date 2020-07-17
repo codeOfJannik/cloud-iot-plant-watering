@@ -14,7 +14,7 @@ class DeviceSoftware(AWSIoTClient):
         :param cert_directory: defines, where to find the aws root cert for IoT Service
         """
         # set run loop value, need for unittests, value because can set f.e. range(10, -1, -1) to run 10 times
-        self.running = 1
+        self.running = True
         # get environment variables (set in docker-compose file)
         self.HARDWARE_URL = os.getenv('HARDWARE_URL')
         self.DEVICE_NAME = os.getenv('DEVICE_NAME')
@@ -29,6 +29,9 @@ class DeviceSoftware(AWSIoTClient):
             super().__init__(self.root_ca, self.certificate, self.private_key, self.DEVICE_NAME)
         else:
             sys.exit('CA Files not exists')
+
+    def is_running(self):
+        return self.running
 
     def run_device_software(self):
         if self.IOT_TYPE == "water_valve":
@@ -56,7 +59,7 @@ class DeviceSoftware(AWSIoTClient):
         """
         print(f'Starting software')
 
-        while self.running:
+        while self.is_running():
             time.sleep(self.INTERVAL_TIME)
             try:
                 url = '{url}/gpios'.format(url=self.HARDWARE_URL)
@@ -82,7 +85,7 @@ class DeviceSoftware(AWSIoTClient):
         """
         print(f'Starting software')
 
-        while self.running:
+        while self.is_running():
             time.sleep(self.INTERVAL_TIME)
             try:
                 url = '{url}/gpios/rain_barrel_sensor'.format(url=self.HARDWARE_URL)
@@ -106,7 +109,7 @@ class DeviceSoftware(AWSIoTClient):
         """
         print(f'Starting software')
 
-        while self.running:
+        while self.is_running():
             time.sleep(self.INTERVAL_TIME)
             try:
                 url = '{url}/gpios/soilMoistureSensor'.format(url=self.HARDWARE_URL)
@@ -188,7 +191,7 @@ class DeviceSoftware(AWSIoTClient):
             self.running = False
             return False
 
-        while self.running:
+        while self.is_running():
             pass
 
     def update_device_shadow(self, data, shadow_name=None):

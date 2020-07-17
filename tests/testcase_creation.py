@@ -1,5 +1,5 @@
 from unittest import TestCase, main
-from unittest.mock import patch, PropertyMock
+from unittest.mock import patch, PropertyMock, Mock
 from iot_core.software_class.device_software import DeviceSoftware
 
 
@@ -33,12 +33,11 @@ def make_test_case(sensor_type, gpio_return_value, device_name):
         @patch('iot_core.software_class.device_software.get_gpio',
                return_value=gpio_return_value
                )
-        def test_run_success(self, mock_get, mock_publish, mock_set, mock_subscribe):
+        # mock the is_running method to run the loop only once
+        @patch('iot_core.software_class.device_software.DeviceSoftware.is_running', side_effect=[True, False])
+        def test_run_success(self, mock_running, mock_get, mock_publish, mock_set, mock_subscribe):
             print(f'\ntest run method for {sensor_type} on success when all connections are established')
-            # run loop only once:
-            sentinel = PropertyMock(side_effect=[1, 0])
-            type(self.device_software).running = sentinel
-
+            # loop for updating sensor values will be run just once cause of mocked is_running method:
             actual = self.device_software.run_device_software()
 
             # because we abort after loop run once and no return value is expected (returns false only at exceptions)
@@ -56,11 +55,8 @@ def make_test_case(sensor_type, gpio_return_value, device_name):
                )
         def test_run_no_client(self, mock_get, mock_client):
             print(f'\ntest run method for {sensor_type} with no AWS IoT client:')
-            # run loop only once:
-            sentinel = PropertyMock(side_effect=[1, 0])
-            type(self.device_software).running = sentinel
-
             actual = self.device_software.run_device_software()
+
             expected = False
             self.assertEqual(expected, actual)
 
@@ -69,11 +65,8 @@ def make_test_case(sensor_type, gpio_return_value, device_name):
 
         def test_run_no_gpio(self):
             print(f'\ntest run method for {sensor_type} with no gpio connection:')
-            # run loop only once:
-            sentinel = PropertyMock(side_effect=[1, 0])
-            type(self.device_software).running = sentinel
-
             actual = self.device_software.run_device_software()
+
             expected = False
             self.assertEqual(expected, actual)
 
