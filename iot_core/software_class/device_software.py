@@ -30,14 +30,15 @@ class DeviceSoftware(AWSIoTClient):
         else:
             sys.exit('CA Files not exists')
 
+    def run_device_software(self):
         if self.IOT_TYPE == "water_valve":
-            self.run_water_valve()
+            return self.run_water_valve()
         elif self.IOT_TYPE == "soil_moisture":
-            self.run_update_soil_moisture()
+            return self.run_update_soil_moisture()
         elif self.IOT_TYPE == "control_panel":
-            self.run_update_control_panel()
+            return self.run_update_control_panel()
         elif self.IOT_TYPE == "rain_barrel":
-            self.run_update_rain_barrel_sensor()
+            return self.run_update_rain_barrel_sensor()
 
     def read_settings_yaml(self):
         # read in yaml
