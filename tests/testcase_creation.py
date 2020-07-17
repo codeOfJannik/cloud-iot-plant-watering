@@ -3,11 +3,11 @@ from unittest.mock import patch, PropertyMock
 from iot_core.software_class.device_software import DeviceSoftware
 
 
-def make_test_case(sensor_type, gpio_return_value, hardware_url, device_name):
+def make_test_case(sensor_type, gpio_return_value, device_name):
     class TestDeviceSoftware(TestCase):
         @classmethod
         # set sample env variables (in real process set by docker-compose)
-        @patch.dict('os.environ', {'HARDWARE_URL': hardware_url,
+        @patch.dict('os.environ', {'HARDWARE_URL': f"http://emulator_{device_name}:9292",
                                    'DEVICE_NAME': device_name})
         # skip super init
         @patch('iot_core.software_class.device_software.super')

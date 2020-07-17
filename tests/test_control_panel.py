@@ -6,7 +6,8 @@ class ControlPanelTestCase(
         sensor_type="control_panel",
         gpio_return_value={"rain_barrel_threshold": {"state": {"value": 10}},
                            "bed_1_soilMoisture_threshold": {"state": {"value": 50}},
-                           "bed_2_soilMoisture_threshold": {"state": {"value": 60}}}
+                           "bed_2_soilMoisture_threshold": {"state": {"value": 60}}},
+        device_name="control_panel"
     )
 ):
     pass
