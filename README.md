@@ -66,6 +66,9 @@ each device (see [docker module](chronos_infrastructure/docker/README.md)).
 After building the Docker containers, the **run.py** script is started in the software container of each device (see
 [Dockerfile](iot_core/Dockerfile) and [README](iot_core/README.md)).
 
+__If changes to software or config files occured and the docker containers should be restarted, it's necessary to call__
+__`terraform destroy chronots_infrastructure/`. Otherwise the AWS IoT MQTT client won't work as desired.__
+
 #### Information terraform destroy
 When `terraform destroy chronos_infrastructure/` is executed, the Docker containers are stopped and all AWS
 resources are deleted in reversed order.
