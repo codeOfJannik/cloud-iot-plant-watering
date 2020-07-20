@@ -8,7 +8,7 @@ import sys
 
 
 class DeviceSoftware(AWSIoTClient):
-    def __init__(self, cert_directory: str = "../cert/", settings_yaml_path="settings.yaml"):
+    def __init__(self, cert_directory: str = "../cert/", settings_yaml_path="../app/settings.yaml"):
         """
         Class to run device software in a loop
         :param cert_directory: defines, where to find the aws root cert for IoT Service
@@ -23,8 +23,8 @@ class DeviceSoftware(AWSIoTClient):
         self.INTERVAL_TIME, self.BED_ID, self.IOT_TYPE = self.read_settings_yaml()
         # set aws client variables
         self.root_ca = os.path.abspath(cert_directory + "root-CA.crt")
-        self.certificate = os.path.abspath(self.DEVICE_NAME + ".cert.pem")
-        self.private_key = os.path.abspath(self.DEVICE_NAME + ".private.key")
+        self.certificate = os.path.abspath(f"../app/{self.DEVICE_NAME}.cert.pem")
+        self.private_key = os.path.abspath(f"../app/{self.DEVICE_NAME}.private.key")
         if self.cert_files_exist():
             super().__init__(self.root_ca, self.certificate, self.private_key, self.DEVICE_NAME)
         else:

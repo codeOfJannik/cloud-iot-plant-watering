@@ -7,6 +7,11 @@ RUN pip install AWSIoTPythonSDK
 RUN pip install pyyaml
 RUN ls -la
 
-WORKDIR ../app
+WORKDIR ../software
+
+COPY software_class /usr/src/software/software_class/
+COPY run.py /usr/src/software/run.py
+
+RUN ls -la
 
 CMD python run.py
