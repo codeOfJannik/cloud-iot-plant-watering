@@ -1,7 +1,7 @@
 For this project the GitLab CI-Runner is used and was installed with the help of the [installation 
 documentation](https://docs.gitlab.com/runner/install/linux-manually.html) and [configuration 
 documentation](https://docs.gitlab.com/runner/configuration/advanced-configuration.html). The runner is set up on a AWS
-EC2 instance.
+EC2 instance. See [.gitlab-ci.yml](.gitlab-ci.yml) for details about the ci-runner usage.
 
 Docker Image, which is used by the CI-Runner (located add ./Dockerfile):
 
