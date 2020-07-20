@@ -18,7 +18,7 @@ no more folder of these device types should be added.
 
 ### New Device
 To setup a new device (soil moisture sensor or watering valve), add a new device folder to the `./devices` directory.
-The folder name must match the pattern of the existing devices (_soilMoisture##_sensor_ or _watering_valve_##_).
+The folder name must match the pattern of the existing devices (_soilMoisture\<nr\>\_sensor_ or _watering_valve\_\<bed_id\>_).
 The number in the name of the watering valve must match the number of the bed to which the valve belongs.
 The device folder needs two files:
 
