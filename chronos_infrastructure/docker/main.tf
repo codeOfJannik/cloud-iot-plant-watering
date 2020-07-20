@@ -41,14 +41,17 @@ resource "docker_container" "software_container" {
     "AWS_IOT_ENDPOINT=${var.aws_endpoint}",
     "PYTHONUNBUFFERED=1"
   ]
+  // mount for each device the directory to the container path
   volumes {
     container_path = "/usr/src/app/"
     host_path = abspath("iot_core/devices/${each.value.hostname}/")
   }
+  // mount the run.py file from the devices root directory
   volumes {
     container_path = "/usr/src/app/run.py"
     host_path = abspath("iot_core/run.py")
   }
+  // mount the software class from the devices root directory
   volumes {
     container_path = "/usr/src/app/software_class/"
     host_path = abspath("iot_core/software_class/")

@@ -13,7 +13,7 @@ Variables:
 
 * local.files (fileset)
 
-    path to every device config.yaml
+    path to every device emulator_config.yaml
 
 * aws_endpoint (string)
 

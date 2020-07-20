@@ -19,7 +19,7 @@ More details about the _iot_core_ terraform can be found in the [_main.tf_](./ma
 Variables:
 * local.files (fileset)
 
-    path to every device policy
+    path to every device settings.yaml
     
 * policy (string)
 
