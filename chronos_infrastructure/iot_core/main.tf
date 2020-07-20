@@ -69,7 +69,7 @@ resource "aws_iot_topic_rule" "control_panel_soil_moisture_threshold_rule" {
   name        = "sendSoilMoistureThreshold"
   description = "send soil moisture threshold data"
   enabled     = true
-  sql         = "SELECT state.reported.value, state.reported.bed_id FROM '$aws/things/control_panel/shadow/name/+/update/accepted' WHERE regexp_matches(topic(6), 'bed[0-9]{1,2}_soilMoisture_threshold')"
+  sql         = "SELECT state.reported.value, state.reported.bed_id FROM '$aws/things/control_panel/shadow/name/+/update/accepted' WHERE regexp_matches(topic(6), 'bed_[0-9]{1,2}_soilMoisture_threshold')"
   sql_version = "2016-03-23"
 
   iot_events {
