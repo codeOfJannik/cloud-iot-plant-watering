@@ -25,6 +25,7 @@ https://gitlab.mi.hdm-stuttgart.de/csiot-tools/emulator
 - [IoT Events](iot_events/README.md)
 - [Software Class](iot_core/software_class/README.md)
 - [Tests](tests/README.md)
+- [CI-Runner (Info)](CI-Runner.md)
 
 ## Setup instructions
 
