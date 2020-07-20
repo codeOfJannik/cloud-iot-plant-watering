@@ -163,7 +163,7 @@ print('set gpio success')
 #### Update device shadow
 The ___update_device_shadow___ method is used by all run methods. It receives the data that should be written to the
 shadow as input parameter. The data is put in the correct JSON format to report a state to the device shadow and the 
-JSON message is published to the related shadow update topic. If a shadow_name is passed, a sub-shadow of the device type
+JSON message is published to the related shadow update topic. If a shadow_name is passed, a named shadow of the device type
 will be created. This is needed for the control panel device, which set thresholds of different devices.
 ```python
 def update_device_shadow(self, data, shadow_name=None):
