@@ -17,7 +17,10 @@ used on server side. For more information see [IoT Core](iot_core/README.md) and
 Programming of the software code for the devices was done in Python.
 Due to COVID-19 there were no real devices and sensors, so emulator devices were used instead.
 The emulators are based on the following project:
-https://gitlab.mi.hdm-stuttgart.de/csiot-tools/emulator
+https://gitlab.mi.hdm-stuttgart.de/csiot-tools/emulator.
+
+## Architecture/Infrastructure
+![Architecture](presentation/Structure.png)
 
 ## Further readme files for other important project aspects
 - [Infrastructure as Code (Terraform)](chronos_infrastructure/README.md)
