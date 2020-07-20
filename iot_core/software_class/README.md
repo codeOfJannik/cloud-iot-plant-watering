@@ -1,8 +1,7 @@
 # Software Class
 The _software_class_ directory contains the software code of all Chronos-IoT devices. A main method is called in the
-[___run.py___ file](../run.py), mounted by the [docker containers](../../chronos_infrastructure/docker/README.md) in 
-each device folder. This method decides by a passed environment variable, which device specific method needs to be 
-called. 
+[___run.py___ file](../run.py), copied in the docker image by the [docker build command](../../build). 
+This method decides by a passed environment variable, which device specific method needs to be called. 
 For every device a connection to the AWS MQTT endpoint is setup using the
 AWSIoTClient class in [_aws_iot_client.py_](aws_iot_client.py). The _DeviceSoftware_ class in 
 [_device_software.py_](device_software.py) contains the logic to update sensor values and perform actions of incoming 

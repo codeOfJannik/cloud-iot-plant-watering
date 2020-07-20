@@ -102,6 +102,7 @@ The Dockerfile that is used to build the software docker image.
 - the AWS root certificate is downloaded
 - the AWSIoTDeviceSDK is installed via `pip install AWSIoTPythonSDK`
 - the pyyaml package is installed via `pip install pyyaml`
+- the [software_class](software_class) directory and the [run.py](run.py) file are copied to the docker image
 - [run.py](./run.py) should be executed when docker container is started
 
 ## Policies
