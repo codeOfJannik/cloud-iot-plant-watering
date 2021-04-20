@@ -82,6 +82,6 @@ New devices can be added by creating a new folder for the device at [iot_core/de
 More information about can be found [here](iot_core/README.md).
 
 ## Contributors
-Jannik Schlemmer (js329@hdm-stuttgart.de)  
-Patrick Eichhorn (pe019@hdm-stuttgart.de)  
-Jan Ziemann (jz043@hdm-stuttgart.de)  
+Jannik S. (js329@hdm-stuttgart.de)  
+Patrick E. (pe019@hdm-stuttgart.de)  
+Jan Z. (jz043@hdm-stuttgart.de)  
